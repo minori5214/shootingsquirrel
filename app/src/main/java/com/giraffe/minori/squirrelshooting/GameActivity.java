@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 
 import static com.giraffe.minori.squirrelshooting.SurfaceCreate.Moving;
 import static com.giraffe.minori.squirrelshooting.SurfaceCreate.isFinished;
+//import static com.giraffe.minori.squirrelshooting.SurfaceCreate.replay;
 import static com.giraffe.minori.squirrelshooting.MainActivity.noGameActivity;
 import static com.giraffe.minori.squirrelshooting.SurfaceCreate.mIsAttached;
 import static com.giraffe.minori.squirrelshooting.SurfaceCreate.mThread;
@@ -36,6 +37,8 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.e("Game","OnCreate");
         super.onCreate(savedInstanceState);
+        mSurfaceView = new SurfaceCreate(this);
+        setContentView(mSurfaceView);
         //mediaPlayer3 = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit11);
     }
 
@@ -48,8 +51,6 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        mSurfaceView = new SurfaceCreate(this);
-        setContentView(mSurfaceView);
         //mediaPlayer3.start();
         mGestureDetector = new GestureDetector(this, mOnGestureListener);
         //mediaPlayer2 = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit11);
@@ -79,6 +80,8 @@ public class GameActivity extends AppCompatActivity {
     protected void onRestart(){
         super.onRestart();
         Log.e("Game","OnRestart");
+        mSurfaceView = new SurfaceCreate(this);
+        setContentView(mSurfaceView);
         //mediaPlayer3.start();
     }
 
@@ -89,11 +92,13 @@ public class GameActivity extends AppCompatActivity {
     @Override
     public  boolean onTouchEvent(MotionEvent event){
         if (isFinished == true) {
-
             isFinished = false;
+            mSurfaceView = new SurfaceCreate(this);
+            setContentView(mSurfaceView);
+            //replay = true;
             //finish();
-            Intent intent = new Intent(GameActivity.this, Result.class);
-            startActivity(intent);
+            //Intent intent = new Intent(GameActivity.this, Result.class);
+            //startActivity(intent);
         }
         //return super.onTouchEvent(event);
         return mGestureDetector.onTouchEvent(event);

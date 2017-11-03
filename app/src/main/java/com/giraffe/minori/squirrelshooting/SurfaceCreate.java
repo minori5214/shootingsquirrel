@@ -69,6 +69,7 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
     private long time;
     private float timer;
     public static boolean isFinished;
+    //public static boolean replay;
 
     public static int Gottenstar = 0;
 
@@ -79,8 +80,8 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
         Log.e("Surface","surfaceCreateConstructor"+i);
         mHolder = getHolder();
         mHolder.addCallback(this);
-        //setFocusable(true);
-        //requestFocus();
+        setFocusable(true);
+        requestFocus();
     }
 
     public static int i=0;
@@ -112,15 +113,21 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
     public void run(){
         Log.e("Surface","here?");
         mIsAttached = true;
-        Log.e("Surface","or here?");
+        //replay = true;
         initialize();
+        Log.e("Surface","or here?");
         Log.e("Surface","Run starts now");
         while(mIsAttached) {
-            Log.e("Surface","Running");
-            time = System.currentTimeMillis();
-            drawGameBoard();
-            while (System.currentTimeMillis() - time <= 20) {
+            //if(replay == true) {
+            //    replay = false;
+            //    initialize();
+            //}
+            while(isFinished == false) {
+                time = System.currentTimeMillis();
+                drawGameBoard();
+                while (System.currentTimeMillis() - time <= 20) {
 
+                }
             }
         }
         Log.e("Surface","Thread ends");
@@ -201,10 +208,10 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
                 mCanvas.drawText("Time : 0.00",100,200,mPaint);
                 //mThread.sleep(1000);
                 mPaint.setTextSize(200);
-                mCanvas.drawText("Finished!!!",mWidth/4-130,mHeight/2-100,mPaint);
+                mCanvas.drawText("Finished!!!",mWidth/4-140,mHeight/2-100,mPaint);
                 getHolder().unlockCanvasAndPost(mCanvas);
                 mThread.sleep(2000);
-                mCanvas = getHolder().lockCanvas();
+                getHolder().lockCanvas();
                 mCanvas.drawColor(Color.WHITE);
                 mPaint.setTextSize(100);
                 mPaint.setColor(Color.BLACK);
@@ -212,7 +219,7 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
                 mCanvas.drawText("Touch screen", mWidth/4-40, mHeight/2+300,mPaint);
                 mCanvas.drawBitmap(mBitmapSquirrel, mWidth/2-50, mHeight/2+30, null);
                 getHolder().unlockCanvasAndPost(mCanvas);
-                mThread.sleep(100);
+                mThread.sleep(500);
                 velocity_x = 0.0f;
                 velocity_y = 0.0f;
                 mIsAttached = false;
