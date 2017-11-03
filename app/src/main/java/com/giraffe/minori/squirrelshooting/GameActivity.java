@@ -11,9 +11,11 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
+import icepick.Icepick;
+
 import static com.giraffe.minori.squirrelshooting.SurfaceCreate.Moving;
 import static com.giraffe.minori.squirrelshooting.SurfaceCreate.isFinished;
-//import static com.giraffe.minori.squirrelshooting.SurfaceCreate.replay;
+import static com.giraffe.minori.squirrelshooting.SurfaceCreate.replay;
 import static com.giraffe.minori.squirrelshooting.MainActivity.noGameActivity;
 import static com.giraffe.minori.squirrelshooting.SurfaceCreate.mIsAttached;
 import static com.giraffe.minori.squirrelshooting.SurfaceCreate.mThread;
@@ -31,15 +33,16 @@ public class GameActivity extends AppCompatActivity {
     public static float distance_y;
     public static float velocity_x;
     public static float velocity_y;
-    //MediaPlayer mediaPlayer3;
+    MediaPlayer mediaPlayer3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.e("Game","OnCreate");
         super.onCreate(savedInstanceState);
+        Icepick.restoreInstanceState(this, savedInstanceState);
         mSurfaceView = new SurfaceCreate(this);
         setContentView(mSurfaceView);
-        //mediaPlayer3 = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit11);
+        mediaPlayer3 = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit11);
     }
 
     @Override
@@ -51,7 +54,7 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        //mediaPlayer3.start();
+        mediaPlayer3.start();
         mGestureDetector = new GestureDetector(this, mOnGestureListener);
         //mediaPlayer2 = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit11);
         //mediaPlayer2.start();
@@ -73,7 +76,9 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        //mediaPlayer3.release();
+        mediaPlayer3.stop();
+        mediaPlayer3.reset();
+        mediaPlayer3.release();
         Log.e("Game","onDestroy");
     }
 
@@ -85,6 +90,11 @@ public class GameActivity extends AppCompatActivity {
         //mediaPlayer3.start();
     }
 
+    @Override protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
+    }
+
     @Override
     public void onBackPressed() {
     }
@@ -93,9 +103,9 @@ public class GameActivity extends AppCompatActivity {
     public  boolean onTouchEvent(MotionEvent event){
         if (isFinished == true) {
             isFinished = false;
-            mSurfaceView = new SurfaceCreate(this);
-            setContentView(mSurfaceView);
-            //replay = true;
+            //mSurfaceView = new SurfaceCreate(this);
+            //setContentView(mSurfaceView);
+            replay = true;
             //finish();
             //Intent intent = new Intent(GameActivity.this, Result.class);
             //startActivity(intent);

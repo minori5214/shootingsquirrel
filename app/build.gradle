@@ -19,8 +19,14 @@ android {
     }
 }
 
+repositories {
+    maven {url "https://clojars.org/repo/"}
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'frankiesardo:icepick:3.2.0'
+    provided 'frankiesardo:icepick-processor:3.2.0'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })

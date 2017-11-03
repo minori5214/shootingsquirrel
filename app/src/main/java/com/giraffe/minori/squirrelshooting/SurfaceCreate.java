@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -15,6 +16,8 @@ import android.view.SurfaceView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import icepick.Icepick;
 
 import static com.giraffe.minori.squirrelshooting.GameActivity.velocity_x;
 import static com.giraffe.minori.squirrelshooting.GameActivity.velocity_y;
@@ -69,7 +72,7 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
     private long time;
     private float timer;
     public static boolean isFinished;
-    //public static boolean replay;
+    public static boolean replay;
 
     public static int Gottenstar = 0;
 
@@ -222,8 +225,12 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
                 mThread.sleep(500);
                 velocity_x = 0.0f;
                 velocity_y = 0.0f;
-                mIsAttached = false;
+                //mIsAttached = false;
                 isFinished = true;
+                while(isFinished == true){
+                    mThread.sleep(300);
+                }
+                initialize();
             }
 
             String displaytime = String.format("%.2f", timer);
@@ -262,38 +269,40 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public void surfaceDestroyed(SurfaceHolder holder){
         Log.e("Surface","surfaceDestroyed");
-        if(mBitmapBlackhall!=null){
-            mBitmapBlackhall.recycle();
-            mBitmapBlackhall=null;
+        if(time <= 0.0f) {
+            if (mBitmapBlackhall != null) {
+                mBitmapBlackhall.recycle();
+                mBitmapBlackhall = null;
+            }
+            if (mBitmapEarth != null) {
+                mBitmapEarth.recycle();
+                mBitmapEarth = null;
+            }
+            if (mBitmapMars != null) {
+                mBitmapMars.recycle();
+                mBitmapMars = null;
+            }
+            if (mBitmapUranus != null) {
+                mBitmapUranus.recycle();
+                mBitmapUranus = null;
+            }
+            if (mBitmapSaturn != null) {
+                mBitmapSaturn.recycle();
+                mBitmapSaturn = null;
+            }
+            if (mBitmapStar != null) {
+                mBitmapStar.recycle();
+                mBitmapStar = null;
+            }
+            if (mBitmapSquirrel != null) {
+                mBitmapSquirrel.recycle();
+                mBitmapSquirrel = null;
+            }
+            mIsAttached = false;
+            while (mThread.isAlive()) ;
+            mThread = null;
+            Log.e("Surface", "Thread is killed");
         }
-        if(mBitmapEarth!=null){
-            mBitmapEarth.recycle();
-            mBitmapEarth=null;
-        }
-        if(mBitmapMars!=null){
-            mBitmapMars.recycle();
-            mBitmapMars=null;
-        }
-        if(mBitmapUranus!=null){
-            mBitmapUranus.recycle();
-            mBitmapUranus=null;
-        }
-        if(mBitmapSaturn!=null){
-            mBitmapSaturn.recycle();
-            mBitmapSaturn=null;
-        }
-        if(mBitmapStar!=null){
-            mBitmapStar.recycle();
-            mBitmapStar=null;
-        }
-        if(mBitmapSquirrel!=null){
-            mBitmapSquirrel.recycle();
-            mBitmapSquirrel=null;
-        }
-        mIsAttached = false;
-        while(mThread.isAlive());
-        mThread = null;
-        Log.e("Surface","Thread is killed");
     }
 
     public boolean isStop(){
