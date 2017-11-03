@@ -436,28 +436,28 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
         Log.e("Surface","planet18");
     }
     private void initialize(){
-        Log.e("Surface","Then here");
+        //Log.e("Surface","Then here");
         mRand = new Random();
-        Log.e("Surface","Then here2");
+        //Log.e("Surface","Then here2");
         numStar = 0;
-        Log.e("Surface","Then here3");
+        //Log.e("Surface","Then here3");
         newBlackhall();
-        Log.e("Surface","Then here4");
+        //Log.e("Surface","Then here4");
         newStar(-1);
-        Log.e("Surface","Then here5");
+        //Log.e("Surface","Then here5");
         newPlanet();
-        Log.e("Surface","Then here6");
+        //Log.e("Surface","Then here6");
         newSquirrel();
-        Log.e("Surface","Then here7");
+        //Log.e("Surface","Then here7");
         Moving = false;
-        Log.e("Surface","Then here8");
+        //Log.e("Surface","Then here8");
         isFinished = false;
-        Log.e("Surface","Then here9");
+        //Log.e("Surface","Then here9");
         timer = 10.0f;
-        Log.e("Surface","Then here10");
+        //Log.e("Surface","Then here10");
         notStartYet = true;
-        Log.e("Surface","Then here11");
+        //Log.e("Surface","Then here11");
         count = 0;
-        Log.e("Surface","Then here12");
+        //Log.e("Surface","Then here12");
     }
 }

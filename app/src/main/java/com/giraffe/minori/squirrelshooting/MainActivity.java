@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView mLblMeasuring;
     public static boolean noGameActivity;
     MediaPlayer mediaPlayer;
-    public static MediaPlayer mediaPlayer2;
     public static boolean isGameBGMeEnded;
 
     private void startMeasure() {
@@ -95,20 +94,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.e("Main","OnCreate");
-        noGameActivity = true;
-        //isGameBGMeEnded = true;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit13);
-        mediaPlayer2 = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit11);
-        mediaPlayer.start();
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit29);
         startMeasure();
-        //tapLayout = (ConstraintLayout)findViewById(R.id.tapLayout);
     }
     @Override
     protected void onResume(){
         super.onResume();
         Log.e("Main","OnResume");
+        mediaPlayer.start();
     }
     @Override
     protected void onPause(){
@@ -119,20 +114,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop(){
-        mediaPlayer.stop();
-        mediaPlayer.reset();
-        mediaPlayer.release();
+        mediaPlayer.pause();
         super.onStop();
         Log.e("Main","OnStop");
     }
     @Override
     protected void onRestart(){
         super.onRestart();
-        mediaPlayer2.stop();
-        mediaPlayer2.reset();
-        mediaPlayer2.release();
-        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit13);
-        mediaPlayer2 = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit11);
+        //mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit29);
         mediaPlayer.start();
         Log.e("Main","onRestart");
     }
@@ -140,20 +129,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy(){
         super.onDestroy();
         mediaPlayer.release();
-        mediaPlayer2.release();
         Log.e("Main","onDestroy");
     }
     @Override
     public boolean onTouchEvent(MotionEvent event){
         Log.e("Main","You touched mainactivity!");
-        if(noGameActivity==true) {
-            noGameActivity = false;
-            //mediaPlayer.pause();
-            //isGameBGMeEnded = false;
-            mediaPlayer2.start();
-            Intent intent = new Intent(MainActivity.this, GameActivity.class);
-            startActivity(intent);
-        }
+        mediaPlayer.stop();
+        mediaPlayer.reset();
+        mediaPlayer.release();
+        Intent intent = new Intent(MainActivity.this, MenuActivity.class);
+        startActivity(intent);
         return super.onTouchEvent(event);
     }
 }

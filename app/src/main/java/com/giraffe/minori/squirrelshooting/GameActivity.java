@@ -16,7 +16,6 @@ import static com.giraffe.minori.squirrelshooting.SurfaceCreate.isFinished;
 import static com.giraffe.minori.squirrelshooting.MainActivity.noGameActivity;
 import static com.giraffe.minori.squirrelshooting.SurfaceCreate.mIsAttached;
 import static com.giraffe.minori.squirrelshooting.SurfaceCreate.mThread;
-import static com.giraffe.minori.squirrelshooting.MainActivity.mediaPlayer2;
 import static java.lang.Math.abs;
 
 
@@ -31,11 +30,13 @@ public class GameActivity extends AppCompatActivity {
     public static float distance_y;
     public static float velocity_x;
     public static float velocity_y;
+    //MediaPlayer mediaPlayer3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.e("Game","OnCreate");
         super.onCreate(savedInstanceState);
+        //mediaPlayer3 = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit11);
     }
 
     @Override
@@ -49,6 +50,7 @@ public class GameActivity extends AppCompatActivity {
         super.onResume();
         mSurfaceView = new SurfaceCreate(this);
         setContentView(mSurfaceView);
+        //mediaPlayer3.start();
         mGestureDetector = new GestureDetector(this, mOnGestureListener);
         //mediaPlayer2 = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit11);
         //mediaPlayer2.start();
@@ -57,9 +59,9 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
-        //mediaPlayer2.pause();
         noGameActivity = true;
         Log.e("Game","OnPause");
+        //mediaPlayer3.pause();
     }
 
     protected void onStop(){
@@ -70,13 +72,14 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        //mediaPlayer2.release();
+        //mediaPlayer3.release();
         Log.e("Game","onDestroy");
     }
 
     protected void onRestart(){
         super.onRestart();
         Log.e("Game","OnRestart");
+        //mediaPlayer3.start();
     }
 
     @Override

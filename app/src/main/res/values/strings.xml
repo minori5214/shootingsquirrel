@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">SquirrelShooting</string>
     <string name="touchscreen">TOUCH SCREEN</string>
+    <string name="gamestart">Game Start</string>
+    <string name="records">Records</string>
+    <string name="changeanimal">Change Animal</string>
     <string name="playagain">Play again?</string>
 </resources>
