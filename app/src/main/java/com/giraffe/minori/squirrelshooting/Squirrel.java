@@ -4,7 +4,7 @@ import java.util.List;
 
 import static com.giraffe.minori.squirrelshooting.GameActivity.velocity_x;
 import static com.giraffe.minori.squirrelshooting.GameActivity.velocity_y;
-import static com.giraffe.minori.squirrelshooting.SurfaceCreate.StopFlag;
+import static com.giraffe.minori.squirrelshooting.GameActivity.StopFlag;
 
 /**
  * Created by minori on 2017/09/26.
