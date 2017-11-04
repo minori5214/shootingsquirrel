@@ -47,13 +47,13 @@ public class GameActivity extends AppCompatActivity implements Runnable{
     boolean mThreadRun;
     private boolean mIsAttached;
 
-    public static Squirrel mSquirrel;
+    volatile public static Squirrel mSquirrel;
     public static Bitmap mBitmapSquirrel;
 
-    public static Blackhall mBlackhall;
+    volatile public static Blackhall mBlackhall;
     public static Bitmap mBitmapBlackhall;
 
-    public static Planet mPlanet;
+    volatile public static Planet mPlanet;
     public static Bitmap mBitmapEarth;
     public static Bitmap mBitmapMars;
     public static Bitmap mBitmapUranus;
@@ -62,28 +62,29 @@ public class GameActivity extends AppCompatActivity implements Runnable{
     public static int mWidth;
     public static int mHeight;
 
-    public static Star mStar;
+    volatile public static Star mStar;
     public static Bitmap mBitmapStar;
 
-    public static List<Blackhall> mBlackhallList = new ArrayList<>(2);
-    public static List<Star> mStarList = new ArrayList<>(15);
-    public static List<Planet> mPlanetList = new ArrayList<>(4);
+    volatile public static List<Blackhall> mBlackhallList = new ArrayList<>(2);
+    volatile public static List<Star> mStarList = new ArrayList<>(15);
+    volatile public static List<Planet> mPlanetList = new ArrayList<>(4);
 
-    public static boolean Moving;
-    public boolean isStop;
-    public static boolean StopFlag;
+    volatile public static boolean Moving;
+    volatile public boolean isStop;
+    volatile public static boolean StopFlag;
 
-    public static int Gottenstar = 0;
+    volatile public static int Gottenstar = 0;
 
-    public static boolean notStartYet;
-    public static boolean isLocked;
+    volatile public static boolean notStartYet;
+    volatile public static boolean isLocked;
 
     private Random mRand;
-    public static int numStar;
+    volatile public static int numStar;
 
-    public static float timer;
+    volatile public static float timer;
     private long time;
-    public static boolean isFinished;
+    volatile public static boolean isFinished;
+    volatile public static boolean surfacefinish;
 
     MediaPlayer mediaPlayer3;
 
@@ -198,7 +199,7 @@ public class GameActivity extends AppCompatActivity implements Runnable{
     public void update(){
         try {
 
-            if(count >= 4) {
+            if(count >= 4 && isLocked == false) {
                 if(velocity_x!=0 || velocity_y!=0){
                     mSquirrel.Svelocity_x = velocity_x/200.0f;
                     mSquirrel.Svelocity_y = velocity_y/200.0f;
@@ -237,19 +238,14 @@ public class GameActivity extends AppCompatActivity implements Runnable{
                 velocity_y = 0.0f;
             }
 
-            if(timer <=0.0f){
+            if(timer <=0.0f && isLocked == false){
                 timer = 0.0f;
                 velocity_x = 0.0f;
                 velocity_y = 0.0f;
                 //mIsAttached = false;
                 //isFinished = true;
                 isLocked = true;
-                while(isLocked == true){
-                    //gameThread.sleep(30);
-                }
-                while(isFinished == true){
-                    gameThread.sleep(300);
-                }
+                Moving = false;
             }
 
         } catch (Exception e){
@@ -421,6 +417,8 @@ public class GameActivity extends AppCompatActivity implements Runnable{
         Moving = false;
         //Log.e("Surface","Then here8");
         isFinished = false;
+        isLocked = false;
+        surfacefinish = false;
         //Log.e("Surface","Then here9");
         timer = 10.0f;
         //Log.e("Surface","Then here10");

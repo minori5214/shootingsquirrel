@@ -32,6 +32,7 @@ import static com.giraffe.minori.squirrelshooting.GameActivity.mStarList;
 import static com.giraffe.minori.squirrelshooting.GameActivity.notStartYet;
 import static com.giraffe.minori.squirrelshooting.GameActivity.numStar;
 import static com.giraffe.minori.squirrelshooting.GameActivity.portion;
+import static com.giraffe.minori.squirrelshooting.GameActivity.surfacefinish;
 import static com.giraffe.minori.squirrelshooting.GameActivity.timer;
 import static com.giraffe.minori.squirrelshooting.GameActivity.velocity_x;
 import static com.giraffe.minori.squirrelshooting.GameActivity.velocity_y;
@@ -59,7 +60,6 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
 
     private long time;
     public static boolean replay;
-    private boolean localfinish;
 
     public SurfaceCreate(Context context){
         super(context);
@@ -99,7 +99,6 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
             //    replay = false;
             //    initialize();
             //}
-            localfinish = false;
             while(isFinished == false) {
                 time = System.currentTimeMillis();
                 drawGameBoard();
@@ -141,26 +140,25 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
             //mCanvas.drawBitmap(mBitmapPlanet, mPlanet.getLeft(), mPlanet.getTop(), null);
             mCanvas.drawBitmap(mBitmapSquirrel, mSquirrel.getLeft(), mSquirrel.getTop(), null);
 
-            if(timer <=0.0f && localfinish == false) {
+            if(timer <=0.0f && surfacefinish == false) {
                 //mCanvas = getHolder().lockCanvas();
-                isLocked = true;
                 mCanvas.drawText("Time : 0.00", 100, 200, mPaint);
                 //mThread.sleep(1000);
                 mPaint.setTextSize(200);
                 mCanvas.drawText("Finished!!!", mWidth / 4 - 140, mHeight / 2 - 100, mPaint);
-                Log.e("Surface", String.valueOf(timer));
                 if(timer <= -2.0f) {
-                    localfinish = true;
+                    surfacefinish = true;
                 }
             }
 
-            if(localfinish == true) {
+            if(surfacefinish == true) {
                 mCanvas.drawColor(Color.WHITE);
                 mPaint.setTextSize(100);
                 mPaint.setColor(Color.BLACK);
                 mCanvas.drawText("Your Score : " + String.valueOf(numStar), mWidth / 4 - 50, mHeight / 2, mPaint);
                 mCanvas.drawText("Touch screen", mWidth / 4 - 40, mHeight / 2 + 300, mPaint);
                 mCanvas.drawBitmap(mBitmapSquirrel, mWidth / 2 - 50, mHeight / 2 + 30, null);
+                Log.e("Surface", String.valueOf(timer));
                 if(timer <= -2.5f) {
                     isFinished = true;
                 }
