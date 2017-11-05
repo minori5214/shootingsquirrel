@@ -32,9 +32,23 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8dp"
-        app:layout_constraintHorizontal_bias="0.501"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.4" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/howtoplay"
+        android:id="@+id/howtoplay"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/gamestart"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/credit" />
 
     <Button
         android:layout_width="wrap_content"
@@ -46,10 +60,9 @@
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/gamestart"
+        app:layout_constraintTop_toBottomOf="@+id/howtoplay"
         app:layout_constraintBottom_toBottomOf="@+id/starsum"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintVertical_bias="0.191" />
+        android:layout_marginBottom="8dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -61,9 +74,8 @@
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/gamestart"
+        app:layout_constraintTop_toBottomOf="@+id/credit"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintVertical_bias="0.73" />
+        android:layout_marginBottom="8dp" />
 
 </android.support.constraint.ConstraintLayout>

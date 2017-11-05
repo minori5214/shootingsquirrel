@@ -104,18 +104,12 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
         Log.e("Surface","or here?");
         Log.e("Surface","Run starts now");
         while(mIsAttached2) {
-            //if(replay == true) {
-            //    replay = false;
-            //    initialize();
-            //}
-            while(isFinished == false) {
-                time = uptimeMillis();
-                drawGameBoard();
-                //Log.e("Surface2", String.valueOf(time));
-                //sleep(20-time2);
-                while (uptimeMillis() - time <= 20) {
+            time = uptimeMillis();
+            drawGameBoard();
+            //Log.e("Surface2", String.valueOf(time));
+            //sleep(20-time2);
+            while (uptimeMillis() - time <= 20) {
 
-                }
             }
         }
         Log.e("Surface","Thread ends");
@@ -178,14 +172,16 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
                     mCanvas.drawColor(Color.WHITE);
                     mPaint.setTextSize(100);
                     mPaint.setColor(Color.BLACK);
-                    mCanvas.drawText("Your Score : " + String.valueOf(numStar), mWidth / 4 - 50, mHeight / 2, mPaint);
-                    mCanvas.drawText("Touch screen", mWidth / 4 - 40, mHeight / 2 + 300, mPaint);
-                    mCanvas.drawText("StarSum : " + String.valueOf(Gottenstarsum), mWidth / 4 - 40, mHeight / 2 + 400, mPaint);
-                    mCanvas.drawBitmap(mBitmapSquirrel, mWidth / 2 - 50, mHeight / 2 + 30, null);
+                    mCanvas.drawBitmap(mBitmapSquirrel, mWidth / 2 - 50, mHeight / 2 - 30, null);
+                    mCanvas.drawText("Your Score : " + String.valueOf(numStar), mWidth / 4 - 50, mHeight / 2 - 30, mPaint);
+                    mCanvas.drawText("Touch screen", mWidth / 4 - 30, mHeight / 2 + 270, mPaint);
+                    mPaint.setTextSize(80);
+                    mCanvas.drawText("Your Star : " + String.valueOf(Gottenstarsum), mWidth / 4 - 10, mHeight / 2 + 370, mPaint);
+                    mCanvas.drawText("Back to Menu : " + String.valueOf(Gottenstarsum), mWidth / 4 - 20, mHeight / 2 + 570, mPaint);
                     Log.e("Surface", String.valueOf(timer));
                     if(timer <= -2.7f && numStar >= 30){
                         mPaint.setTextSize(80);
-                        mCanvas.drawText("< Great!!", mWidth / 2 +150, mHeight / 2 + 140, mPaint);
+                        mCanvas.drawText("< Great!!", mWidth / 2 +150, mHeight / 2 + 110, mPaint);
                     }
                     if (timer <= -3.0f) {
                         isFinished = true;

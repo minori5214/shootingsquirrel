@@ -182,22 +182,19 @@ public class GameActivity extends AppCompatActivity implements Runnable{
             //    replay = false;
             //    initialize();
             //}
-            while (isFinished == false) {
-                time = uptimeMillis();
-                Log.e("Game", String.valueOf(time2));
-                update();
-                time2 = uptimeMillis()-time;
-                Log.e("Game2", String.valueOf(time2));
-                while (uptimeMillis() - time <= 20) {
-
-                }
+            time = uptimeMillis();
+            Log.e("Game", String.valueOf(time2));
+            update();
+            time2 = uptimeMillis()-time;
+            Log.e("Game2", String.valueOf(time2));
+            while (uptimeMillis() - time <= 20) {
             }
         }
         Log.e("Game", "Thread ends");
     }
 
     @Override
-    protected void onPause(){
+    protected synchronized void onPause(){
         super.onPause();
         mediaPlayer3.pause();
         noGameActivity = true;
@@ -224,6 +221,7 @@ public class GameActivity extends AppCompatActivity implements Runnable{
         mediaPlayer3.release();
         mSoundPool.release();
         mSurfaceSoundPool.release();
+        gameThread = null;
         Log.e("Game","onDestroy");
     }
 
@@ -249,6 +247,7 @@ public class GameActivity extends AppCompatActivity implements Runnable{
                     mSquirrel.Svelocity_y = velocity_y/200.0f;
                     Moving = true;
                 }
+                Log.e("GamePhase_rotation", "Phase_0_1");
                 for (Planet planet : mPlanetList) {
                     planet.rotation();
                     if (mSquirrel.collision(planet)) {
@@ -276,7 +275,6 @@ public class GameActivity extends AppCompatActivity implements Runnable{
                     }
                 }
             }
-
             //mSquirrel.move(velocity_x/100.0f,velocity_y/100.0f);
             //if(isStop() == true){
                 //if(mSquirrel.getRight() <0.0f-100.0f || mSquirrel.getLeft() > mWidth+100.0f || mSquirrel.getBottom() < 0.0f-100.0f || mSquirrel.getTop() > mHeight+100.0f){
@@ -296,8 +294,6 @@ public class GameActivity extends AppCompatActivity implements Runnable{
                 timer = 0.0f;
                 velocity_x = 0.0f;
                 velocity_y = 0.0f;
-                //mIsAttached = false;
-                //isFinished = true;
                 isLocked = true;
                 Moving = false;
                 Gottenstarsum += numStar;

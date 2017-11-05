@@ -11,16 +11,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import icepick.Icepick;
-import icepick.State;
-
 import static com.giraffe.minori.squirrelshooting.GameActivity.Gottenstarsum;
 import static com.giraffe.minori.squirrelshooting.MainActivity.noGameActivity;
 
 public class MenuActivity extends AppCompatActivity {
     MediaPlayer mediaPlayer2;
-    @State
-    int test;
     //MediaPlayer mediaPlayer3;
 
 
@@ -31,7 +26,7 @@ public class MenuActivity extends AppCompatActivity {
         Gottenstarsum = pref.getInt("StarSum", 0);
         Log.e("Menu_Save",String.valueOf(Gottenstarsum));
 
-        setContentView(R.layout.activity_menu);
+        setScreenMenu();
 
         TextView text = (TextView)findViewById(R.id.starsum);
         text.setText("Your Star : " + String.valueOf(Gottenstarsum));
@@ -43,6 +38,9 @@ public class MenuActivity extends AppCompatActivity {
         mediaPlayer2.seekTo(0);
         //mediaPlayer3 = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit11);
 
+    }
+    private void setScreenMenu(){
+        setContentView(R.layout.activity_menu);
         Button gamestart = (Button) this.findViewById(R.id.gamestart);
         gamestart.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -60,12 +58,39 @@ public class MenuActivity extends AppCompatActivity {
                 }
             }
         });
-
         Button credit = (Button) this.findViewById(R.id.credit);
-        credit.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                Log.e("Credit","You touched mainactivity!");
-                //setContentView(R.layout.activity_credit);
+        credit.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                setScreenCredit();
+            }
+        });
+        Button howtoplay = (Button) this.findViewById(R.id.howtoplay);
+        howtoplay.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                setScreenHowtoplay();
+            }
+        });
+    }
+    private void setScreenCredit(){
+        setContentView(R.layout.activity_credit);
+        Button menu = (Button) this.findViewById(R.id.menu);
+        menu.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                setScreenMenu();
+                TextView text = (TextView)findViewById(R.id.starsum);
+                text.setText("Your Star : " + String.valueOf(Gottenstarsum));
+            }
+        });
+    }
+
+    private void setScreenHowtoplay(){
+        setContentView(R.layout.activity_howtoplay);
+        Button menu = (Button) this.findViewById(R.id.menu);
+        menu.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                setScreenMenu();
+                TextView text = (TextView)findViewById(R.id.starsum);
+                text.setText("Your Star : " + String.valueOf(Gottenstarsum));
             }
         });
     }
@@ -111,7 +136,6 @@ public class MenuActivity extends AppCompatActivity {
 
     @Override protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
     }
     //@Override
     //public boolean onTouchEvent(MotionEvent event){
