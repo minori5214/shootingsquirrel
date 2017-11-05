@@ -82,7 +82,7 @@ public class Squirrel extends GameObject {
         this.move(Svelocity_x,Svelocity_y);
     }
     public boolean GotStar(Star star){
-        if(calcDistance(star) <= 70.0f){
+        if(calcDistance(star) <= 80.0f){
             return true;
         }
         return false;

@@ -1,6 +1,7 @@
 package com.giraffe.minori.squirrelshooting;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.media.MediaPlayer;
@@ -8,21 +9,38 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
+import icepick.Icepick;
+import icepick.State;
+
+import static com.giraffe.minori.squirrelshooting.GameActivity.Gottenstarsum;
 import static com.giraffe.minori.squirrelshooting.MainActivity.noGameActivity;
 
 public class MenuActivity extends AppCompatActivity {
     MediaPlayer mediaPlayer2;
+    @State
+    int test;
     //MediaPlayer mediaPlayer3;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences pref = getSharedPreferences("MyPref", GameActivity.MODE_PRIVATE);
+        Gottenstarsum = pref.getInt("StarSum", 0);
+        Log.e("Menu_Save",String.valueOf(Gottenstarsum));
+
         setContentView(R.layout.activity_menu);
+
+        TextView text = (TextView)findViewById(R.id.starsum);
+        text.setText("Your Star : " + String.valueOf(Gottenstarsum));
+
         Log.e("Menu","OnCreate");
         noGameActivity = true;
         mediaPlayer2 = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit13);
+        mediaPlayer2.setLooping(true);
+        mediaPlayer2.seekTo(0);
         //mediaPlayer3 = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit11);
 
         Button gamestart = (Button) this.findViewById(R.id.gamestart);
@@ -40,6 +58,14 @@ public class MenuActivity extends AppCompatActivity {
                     mediaPlayer2.reset();
                     mediaPlayer2.release();
                 }
+            }
+        });
+
+        Button credit = (Button) this.findViewById(R.id.credit);
+        credit.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                Log.e("Credit","You touched mainactivity!");
+                //setContentView(R.layout.activity_credit);
             }
         });
     }
@@ -83,6 +109,10 @@ public class MenuActivity extends AppCompatActivity {
     public void onBackPressed() {
     }
 
+    @Override protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
+    }
     //@Override
     //public boolean onTouchEvent(MotionEvent event){
     //    Log.e("Main","You touched mainactivity!");

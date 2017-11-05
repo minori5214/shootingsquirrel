@@ -97,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit29);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.seekTo(0);
         startMeasure();
     }
     @Override

@@ -1,6 +1,7 @@
 package com.giraffe.minori.squirrelshooting;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,7 +9,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.media.AudioAttributes;
 import android.media.MediaPlayer;
+import android.media.SoundPool;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,10 +26,11 @@ import java.util.List;
 import java.util.Random;
 
 import icepick.Icepick;
+import icepick.State;
 
+import static android.os.SystemClock.uptimeMillis;
 import static com.giraffe.minori.squirrelshooting.SurfaceCreate.replay;
 import static com.giraffe.minori.squirrelshooting.MainActivity.noGameActivity;
-import static com.giraffe.minori.squirrelshooting.SurfaceCreate.mThread;
 import static java.lang.Math.abs;
 
 
@@ -74,6 +79,7 @@ public class GameActivity extends AppCompatActivity implements Runnable{
     volatile public static boolean StopFlag;
 
     volatile public static int Gottenstar = 0;
+    volatile public static int Gottenstarsum;
 
     volatile public static boolean notStartYet;
     volatile public static boolean isLocked;
@@ -83,16 +89,27 @@ public class GameActivity extends AppCompatActivity implements Runnable{
 
     volatile public static float timer;
     private long time;
+    private long time2;
     volatile public static boolean isFinished;
     volatile public static boolean surfacefinish;
+    public static boolean greatswitch;
 
     MediaPlayer mediaPlayer3;
+    SoundPool mSoundPool;
+    private int mSoundStar, mSoundCollision;
+
+    SoundPool mSurfaceSoundPool;
+    private int mSoundGreat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.e("Game","OnCreate");
         super.onCreate(savedInstanceState);
-        Icepick.restoreInstanceState(this, savedInstanceState);
+        Log.e("Save", String.valueOf(Gottenstarsum));
+
+        SharedPreferences pref = getSharedPreferences("MyPref", GameActivity.MODE_PRIVATE);
+        Gottenstarsum = pref.getInt("StarSum", 0);
+        Log.e("Save",String.valueOf(Gottenstarsum));
 
         Resources rsc = getResources();
         mBitmapBlackhall = BitmapFactory.decodeResource(rsc, R.drawable.blackhall);
@@ -116,6 +133,26 @@ public class GameActivity extends AppCompatActivity implements Runnable{
         setContentView(mSurfaceView);
 
         mediaPlayer3 = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit11);
+        mediaPlayer3.setLooping(true);
+        mediaPlayer3.seekTo(0);
+
+        mSoundPool = new SoundPool.Builder()
+                .setAudioAttributes(new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_GAME)
+                        .build())
+                .setMaxStreams(5)
+                .build();
+        mSoundStar = mSoundPool.load(getApplicationContext(), R.raw.se_maoudamashii_system46, 0);
+        mSoundCollision = mSoundPool.load(getApplicationContext(), R.raw.se_maoudamashii_retro28, 1);
+
+        mSurfaceSoundPool = new SoundPool.Builder()
+            .setAudioAttributes(new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_GAME)
+                .build())
+            .setMaxStreams(1)
+            .build();
+        mSoundGreat = mSurfaceSoundPool.load(getApplicationContext(), R.raw.se_maoudamashii_onepoint04, 0);
+
         mThreadRun = true;
         gameThread = new Thread(this);
         gameThread.start();
@@ -146,19 +183,23 @@ public class GameActivity extends AppCompatActivity implements Runnable{
             //    initialize();
             //}
             while (isFinished == false) {
-                time = System.currentTimeMillis();
+                time = uptimeMillis();
+                Log.e("Game", String.valueOf(time2));
                 update();
-                while (System.currentTimeMillis() - time <= 20) {
+                time2 = uptimeMillis()-time;
+                Log.e("Game2", String.valueOf(time2));
+                while (uptimeMillis() - time <= 20) {
 
                 }
             }
         }
-        Log.e("Surface", "Thread ends");
+        Log.e("Game", "Thread ends");
     }
 
     @Override
     protected void onPause(){
         super.onPause();
+        mediaPlayer3.pause();
         noGameActivity = true;
         Log.e("Game","OnPause");
         //mediaPlayer3.pause();
@@ -166,6 +207,12 @@ public class GameActivity extends AppCompatActivity implements Runnable{
 
     protected void onStop(){
         super.onStop();
+        mediaPlayer3.pause();
+        SharedPreferences pref = getSharedPreferences("MyPref", GameActivity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putInt("StarSum", Gottenstarsum);
+        Log.e("Save",String.valueOf(Gottenstarsum));
+        editor.commit();
         Log.e("Game","OnStop");
         //finish();
     }
@@ -175,6 +222,8 @@ public class GameActivity extends AppCompatActivity implements Runnable{
         mediaPlayer3.stop();
         mediaPlayer3.reset();
         mediaPlayer3.release();
+        mSoundPool.release();
+        mSurfaceSoundPool.release();
         Log.e("Game","onDestroy");
     }
 
@@ -183,22 +232,17 @@ public class GameActivity extends AppCompatActivity implements Runnable{
         Log.e("Game","OnRestart");
         mSurfaceView = new SurfaceCreate(this);
         setContentView(mSurfaceView);
+        mediaPlayer3.start();
         //mediaPlayer3.start();
     }
 
-    @Override protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
+    @Override
+    public void onBackPressed() {
     }
-
-
-    //@Override
-    //public void onBackPressed() {
-    //}
 
     public void update(){
         try {
-
+            Log.e("GamePhase", "Phase_0");
             if(count >= 4 && isLocked == false) {
                 if(velocity_x!=0 || velocity_y!=0){
                     mSquirrel.Svelocity_x = velocity_x/200.0f;
@@ -208,14 +252,24 @@ public class GameActivity extends AppCompatActivity implements Runnable{
                 for (Planet planet : mPlanetList) {
                     planet.rotation();
                     if (mSquirrel.collision(planet)) {
-                        StopFlag = true;
+                        mSoundPool.play(mSoundCollision, 1.0F, 1.0F, 0, 0, 1.0F);
+                        synchronized (mStarList) {
+                            rePlay();
+                        }
                     }
                 }
             }
+            Log.e("GamePhase", "Phase_1");
             if(Moving == true){
                 mSquirrel.update(mSquirrel.calcNetForceExertedByX(mBlackhallList), mSquirrel.calcNetForceExertedByY(mBlackhallList));
+                if(mSquirrel.getRight() <0.0f-100.0f || mSquirrel.getLeft() > mWidth+100.0f || mSquirrel.getBottom() < 0.0f-100.0f || mSquirrel.getTop() > mHeight+100.0f){
+                    synchronized (mStarList) {
+                        rePlay();
+                    }
+                }
                 for(Star star : mStarList) {
                     if(mSquirrel.GotStar(star)){
+                        mSoundPool.play(mSoundStar, 1.0F, 1.0F, 0, 0, 1.0F);
                         Gottenstar += 1;
                         star.move(-1000,-1000);
                         numStar += 1;
@@ -224,20 +278,20 @@ public class GameActivity extends AppCompatActivity implements Runnable{
             }
 
             //mSquirrel.move(velocity_x/100.0f,velocity_y/100.0f);
-            if(isStop() == true){
+            //if(isStop() == true){
                 //if(mSquirrel.getRight() <0.0f-100.0f || mSquirrel.getLeft() > mWidth+100.0f || mSquirrel.getBottom() < 0.0f-100.0f || mSquirrel.getTop() > mHeight+100.0f){
                 //mThread.sleep(1000);
-                newStar(Gottenstar);
-                Gottenstar = 0;
-                mSquirrel.setLocate(mWidth/2, (float)mHeight-(float)mBitmapSquirrel.getHeight());
-                Moving = false;
-                StopFlag = false;
-                mSquirrel.Svelocity_x = 0.0f;
-                mSquirrel.Svelocity_y = 0.0f;
-                velocity_x = 0.0f;
-                velocity_y = 0.0f;
-            }
-
+                //newStar(Gottenstar);
+                //Gottenstar = 0;
+                //mSquirrel.setLocate(mWidth/2, (float)mHeight-(float)mBitmapSquirrel.getHeight());
+                //Moving = false;
+                //StopFlag = false;
+                //mSquirrel.Svelocity_x = 0.0f;
+                //mSquirrel.Svelocity_y = 0.0f;
+                //velocity_x = 0.0f;
+                //velocity_y = 0.0f;
+            //}
+            Log.e("GamePhase", "Phase_2");
             if(timer <=0.0f && isLocked == false){
                 timer = 0.0f;
                 velocity_x = 0.0f;
@@ -246,6 +300,11 @@ public class GameActivity extends AppCompatActivity implements Runnable{
                 //isFinished = true;
                 isLocked = true;
                 Moving = false;
+                Gottenstarsum += numStar;
+            }
+            if(greatswitch == true){
+                mSurfaceSoundPool.play(mSoundGreat, 1.0F, 1.0F, 0, 0, 1.0F);
+                greatswitch = false;
             }
 
         } catch (Exception e){
@@ -255,13 +314,21 @@ public class GameActivity extends AppCompatActivity implements Runnable{
     }
 
     public boolean isStop(){
-        if(mSquirrel.getRight() <0.0f-100.0f || mSquirrel.getLeft() > mWidth+100.0f || mSquirrel.getBottom() < 0.0f-100.0f || mSquirrel.getTop() > mHeight+100.0f) {
+        if(mSquirrel.getRight() <0.0f-100.0f || mSquirrel.getLeft() > mWidth+100.0f || mSquirrel.getBottom() < 0.0f-100.0f || mSquirrel.getTop() > mHeight+100.0f || StopFlag == true) {
             return true;
         }
-        if(StopFlag == true){
-            return true;
-        }
-        return false;
+        else return false;
+    }
+    private void rePlay(){
+        mSquirrel.setLocate(mWidth/2, (float)mHeight-(float)mBitmapSquirrel.getHeight());
+        newStar(Gottenstar);
+        Gottenstar = 0;
+        Moving = false;
+        StopFlag = false;
+        mSquirrel.Svelocity_x = 0.0f;
+        mSquirrel.Svelocity_y = 0.0f;
+        velocity_x = 0.0f;
+        velocity_y = 0.0f;
     }
     private void newBlackhall(){
         Blackhall blackhall;

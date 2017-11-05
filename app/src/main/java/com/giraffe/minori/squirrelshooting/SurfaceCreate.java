@@ -7,6 +7,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -19,7 +21,11 @@ import java.util.Random;
 
 import icepick.Icepick;
 
+import static android.os.SystemClock.sleep;
+import static android.os.SystemClock.uptimeMillis;
+import static com.giraffe.minori.squirrelshooting.GameActivity.Gottenstarsum;
 import static com.giraffe.minori.squirrelshooting.GameActivity.count;
+import static com.giraffe.minori.squirrelshooting.GameActivity.greatswitch;
 import static com.giraffe.minori.squirrelshooting.GameActivity.isFinished;
 import static com.giraffe.minori.squirrelshooting.GameActivity.isLocked;
 import static com.giraffe.minori.squirrelshooting.GameActivity.mBitmapBlackhall;
@@ -59,7 +65,10 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
     private static final int SWIPE_MAX_OFF_PATH = 250;
 
     private long time;
+    private long time2;
+    private long time3;
     public static boolean replay;
+
 
     public SurfaceCreate(Context context){
         super(context);
@@ -100,9 +109,11 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
             //    initialize();
             //}
             while(isFinished == false) {
-                time = System.currentTimeMillis();
+                time = uptimeMillis();
                 drawGameBoard();
-                while (System.currentTimeMillis() - time <= 20) {
+                //Log.e("Surface2", String.valueOf(time));
+                //sleep(20-time2);
+                while (uptimeMillis() - time <= 20) {
 
                 }
             }
@@ -113,88 +124,112 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
 
     public void drawGameBoard(){
         try {
-
             mCanvas = getHolder().lockCanvas();
-            Thread.sleep(3);
-            mCanvas.drawColor(Color.rgb(42,42,90));
-            //mCanvas.drawBitmap(bmp, 0, 0, null);
-            mPaint.setColor(Color.WHITE);
-            mPaint.setTextSize(100);
-            mCanvas.drawText("Score : " + String.valueOf(numStar),100,100,mPaint);
-            //mCanvas.drawText("velocityY : " + String.valueOf(velocity_y),100,300,mPaint);
-            //mCanvas.drawText(String.valueOf(mSquirrel.calcNetForceExertedByY(mBlackhallList)),100,100,mPaint);
-            //mCanvas.drawText(String.valueOf(velocity_x),100,500,mPaint);
-            //mCanvas.drawText(String.valueOf(mSquirrel.Svelocity_x),100,600,mPaint);
-            //mCanvas.drawText(String.valueOf(velocity_y),100,700,mPaint);
-            //mCanvas.drawText(String.valueOf(mSquirrel.Svelocity_y),100,800,mPaint);
-
-            for (Blackhall blackhall : mBlackhallList){
-                mCanvas.drawBitmap(mBitmapBlackhall, blackhall.getLeft(), blackhall.getTop(), null);
-            }
-            for (Star star : mStarList){
-                mCanvas.drawBitmap(mBitmapStar, star.getLeft(), star.getTop(), null);
-            }
-            for (Planet planet : mPlanetList){
-                mCanvas.drawBitmap(planet.getImage(), planet.getLeft(), planet.getTop(), null);
-            }
-            //mCanvas.drawBitmap(mBitmapPlanet, mPlanet.getLeft(), mPlanet.getTop(), null);
-            mCanvas.drawBitmap(mBitmapSquirrel, mSquirrel.getLeft(), mSquirrel.getTop(), null);
-
-            if(timer <=0.0f && surfacefinish == false) {
-                //mCanvas = getHolder().lockCanvas();
-                mCanvas.drawText("Time : 0.00", 100, 200, mPaint);
-                //mThread.sleep(1000);
-                mPaint.setTextSize(200);
-                mCanvas.drawText("Finished!!!", mWidth / 4 - 140, mHeight / 2 - 100, mPaint);
-                if(timer <= -2.0f) {
-                    surfacefinish = true;
-                }
-            }
-
-            if(surfacefinish == true) {
-                mCanvas.drawColor(Color.WHITE);
+            time2 = uptimeMillis();
+            Log.e("Surface_Phase", String.valueOf(time2));
+            //sleep(3);
+            if(mCanvas != null) {
+                mCanvas.drawColor(Color.rgb(42, 42, 90));
+                //mCanvas.drawBitmap(bmp, 0, 0, null);
+                mPaint.setColor(Color.WHITE);
                 mPaint.setTextSize(100);
-                mPaint.setColor(Color.BLACK);
-                mCanvas.drawText("Your Score : " + String.valueOf(numStar), mWidth / 4 - 50, mHeight / 2, mPaint);
-                mCanvas.drawText("Touch screen", mWidth / 4 - 40, mHeight / 2 + 300, mPaint);
-                mCanvas.drawBitmap(mBitmapSquirrel, mWidth / 2 - 50, mHeight / 2 + 30, null);
-                Log.e("Surface", String.valueOf(timer));
-                if(timer <= -2.5f) {
-                    isFinished = true;
+                mCanvas.drawText("Score : " + String.valueOf(numStar), 100, 100, mPaint);
+                //mCanvas.drawText("velocityY : " + String.valueOf(velocity_y),100,300,mPaint);
+                //mCanvas.drawText(String.valueOf(mSquirrel.calcNetForceExertedByY(mBlackhallList)),100,100,mPaint);
+                //mCanvas.drawText(String.valueOf(velocity_x),100,500,mPaint);
+                //mCanvas.drawText(String.valueOf(mSquirrel.Svelocity_x),100,600,mPaint);
+                //mCanvas.drawText(String.valueOf(velocity_y),100,700,mPaint);
+                //mCanvas.drawText(String.valueOf(mSquirrel.Svelocity_y),100,800,mPaint);
+                Log.e("Surface_Phase", "Phase---1");
+                Log.e("Surface_Phase", String.valueOf(mCanvas==null));
+                for (Blackhall blackhall : mBlackhallList) {
+                    mCanvas.drawBitmap(mBitmapBlackhall, blackhall.getLeft(), blackhall.getTop(), null);
                 }
-                while (isFinished == true) {
-                    mThread.sleep(300);
+                synchronized (mStarList) {
+                    Log.e("Surface_Phase", "Phase---2");
+                    for (Star star : mStarList) {
+                        mCanvas.drawBitmap(mBitmapStar, star.getLeft(), star.getTop(), null);
+                    }
+                    Log.e("Surface_Phase", "Phase---3");
                 }
-            }
-
-            if(count >= 4 && timer > -2500.0f) {
-                timer -= 20.0f / 1000.0f;
-                if (timer > 0.0f) {
-                    String displaytime = String.format("%.2f", timer);
-                    mCanvas.drawText("Time : " + displaytime, 100, 200, mPaint);
-                } else if(timer >= 10.0f){
+                for (Planet planet : mPlanetList) {
+                    mCanvas.drawBitmap(planet.getImage(), planet.getLeft(), planet.getTop(), null);
+                }
+                Log.e("Surface_Phase", "Phase---4");
+                //mCanvas.drawBitmap(mBitmapPlanet, mPlanet.getLeft(), mPlanet.getTop(), null);
+                mCanvas.drawBitmap(mBitmapSquirrel, mSquirrel.getLeft(), mSquirrel.getTop(), null);
+                Log.e("Surface_Phase", "Phase---5");
+                Log.e("Surface_Phase", String.valueOf(mCanvas==null));
+                if (timer <= 0.0f && surfacefinish == false) {
+                    //mCanvas = getHolder().lockCanvas();
+                    mCanvas.drawText("Time : 0.00", 100, 200, mPaint);
+                    //mThread.sleep(1000);
+                    mPaint.setTextSize(200);
+                    mCanvas.drawText("Finished!!!", mWidth / 4 - 140, mHeight / 2 - 100, mPaint);
+                    if (timer <= -2.0f) {
+                        if(numStar >= 30) {
+                            greatswitch = true;
+                        }
+                        surfacefinish = true;
+                    }
+                }
+                Log.e("Surface_Phase", "Phase---6");
+                if (surfacefinish == true) {
+                    mCanvas.drawColor(Color.WHITE);
+                    mPaint.setTextSize(100);
+                    mPaint.setColor(Color.BLACK);
+                    mCanvas.drawText("Your Score : " + String.valueOf(numStar), mWidth / 4 - 50, mHeight / 2, mPaint);
+                    mCanvas.drawText("Touch screen", mWidth / 4 - 40, mHeight / 2 + 300, mPaint);
+                    mCanvas.drawText("StarSum : " + String.valueOf(Gottenstarsum), mWidth / 4 - 40, mHeight / 2 + 400, mPaint);
+                    mCanvas.drawBitmap(mBitmapSquirrel, mWidth / 2 - 50, mHeight / 2 + 30, null);
+                    Log.e("Surface", String.valueOf(timer));
+                    if(timer <= -2.7f && numStar >= 30){
+                        mPaint.setTextSize(80);
+                        mCanvas.drawText("< Great!!", mWidth / 2 +150, mHeight / 2 + 140, mPaint);
+                    }
+                    if (timer <= -3.0f) {
+                        isFinished = true;
+                    }
+                    while (isFinished == true) {
+                        Log.e("Surface_Phase", "Waiting for replay");
+                        mThread.sleep(300);
+                    }
+                }
+                Log.e("Surface_Phase", "Phase---7");
+                if (count >= 4 && timer > -2500.0f) {
+                    Log.e("Surface_Phase", "Phase---8");
+                    timer -= 20.0f / 1000.0f;
+                    if (timer > 0.0f) {
+                        Log.e("Surface_Phase", "Phase---9");
+                        String displaytime = String.format("%.2f", timer);
+                        mCanvas.drawText("Time : " + displaytime, 100, 200, mPaint);
+                    } else if (timer >= 10.0f) {
+                        mCanvas.drawText("Time : " + 10.0, 100, 200, mPaint);
+                    }
+                }
+                Log.e("Surface_Phase", "Phase---10");
+                if (count < 4) {
                     mCanvas.drawText("Time : " + 10.0, 100, 200, mPaint);
+                    if (portion % 50 == 0) {
+                        //gameThread.sleep(1000);
+                        count += 1;
+                    }
+                    if (count < 3) {
+                        mPaint.setTextSize(500);
+                        mCanvas.drawText(String.valueOf(3 - count), mWidth / 2 - 80, mHeight / 2, mPaint);
+                    }
+                    if (count == 3) {
+                        mPaint.setTextSize(300);
+                        mCanvas.drawText("Start!!", mWidth / 4 - 80, mHeight / 2 - 100, mPaint);
+                    }
                 }
             }
-
-            if(count < 4){
-                if(portion % 50 == 0){
-                    //gameThread.sleep(1000);
-                    count += 1;
-                }
-                if(count < 3) {
-                    mPaint.setTextSize(500);
-                    mCanvas.drawText(String.valueOf(3-count), mWidth / 2 - 80 , mHeight / 2, mPaint);
-                }
-                if(count == 3) {
-                    mPaint.setTextSize(300);
-                    mCanvas.drawText("Start!!", mWidth / 4 - 80, mHeight / 2 - 100, mPaint);
-                }
-            }
-
-            getHolder().unlockCanvasAndPost(mCanvas);
+            Log.e("Surface_Phase", "Phase---11");
             portion += 1;
-
+            time3 = uptimeMillis()-time2;
+            Log.e("Surface_Phase2", String.valueOf(time3));
+            getHolder().unlockCanvasAndPost(mCanvas);
+            Log.e("Surface_Phase", String.valueOf(mCanvas==null));
         } catch (Exception e){
             e.printStackTrace();
         }
