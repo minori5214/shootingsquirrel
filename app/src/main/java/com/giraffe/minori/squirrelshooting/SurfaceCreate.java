@@ -25,9 +25,7 @@ import static android.os.SystemClock.sleep;
 import static android.os.SystemClock.uptimeMillis;
 import static com.giraffe.minori.squirrelshooting.GameActivity.Gottenstarsum;
 import static com.giraffe.minori.squirrelshooting.GameActivity.count;
-import static com.giraffe.minori.squirrelshooting.GameActivity.greatswitch;
 import static com.giraffe.minori.squirrelshooting.GameActivity.isFinished;
-import static com.giraffe.minori.squirrelshooting.GameActivity.isLocked;
 import static com.giraffe.minori.squirrelshooting.GameActivity.mBitmapBlackhall;
 import static com.giraffe.minori.squirrelshooting.GameActivity.mBitmapSquirrel;
 import static com.giraffe.minori.squirrelshooting.GameActivity.mBitmapStar;
@@ -35,9 +33,7 @@ import static com.giraffe.minori.squirrelshooting.GameActivity.mBlackhallList;
 import static com.giraffe.minori.squirrelshooting.GameActivity.mPlanetList;
 import static com.giraffe.minori.squirrelshooting.GameActivity.mSquirrel;
 import static com.giraffe.minori.squirrelshooting.GameActivity.mStarList;
-import static com.giraffe.minori.squirrelshooting.GameActivity.notStartYet;
 import static com.giraffe.minori.squirrelshooting.GameActivity.numStar;
-import static com.giraffe.minori.squirrelshooting.GameActivity.portion;
 import static com.giraffe.minori.squirrelshooting.GameActivity.surfacefinish;
 import static com.giraffe.minori.squirrelshooting.GameActivity.timer;
 import static com.giraffe.minori.squirrelshooting.GameActivity.velocity_x;
@@ -66,7 +62,6 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
 
     private long time;
     private long time2;
-    private long time3;
     public static boolean replay;
 
 
@@ -153,17 +148,13 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
                 //mCanvas.drawBitmap(mBitmapPlanet, mPlanet.getLeft(), mPlanet.getTop(), null);
                 mCanvas.drawBitmap(mBitmapSquirrel, mSquirrel.getLeft(), mSquirrel.getTop(), null);
                 Log.e("Surface_Phase", "Phase---5");
-                Log.e("Surface_Phase", String.valueOf(mCanvas==null));
                 if (timer <= 0.0f && surfacefinish == false) {
                     //mCanvas = getHolder().lockCanvas();
                     mCanvas.drawText("Time : 0.00", 100, 200, mPaint);
                     //mThread.sleep(1000);
                     mPaint.setTextSize(200);
                     mCanvas.drawText("Finished!!!", mWidth / 4 - 140, mHeight / 2 - 100, mPaint);
-                    if (timer <= -2.0f) {
-                        if(numStar >= 30) {
-                            greatswitch = true;
-                        }
+                    if (timer <= -2.0f){
                         surfacefinish = true;
                     }
                 }
@@ -177,39 +168,23 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
                     mCanvas.drawText("Touch screen", mWidth / 4 - 30, mHeight / 2 + 270, mPaint);
                     mPaint.setTextSize(80);
                     mCanvas.drawText("Your Star : " + String.valueOf(Gottenstarsum), mWidth / 4 - 10, mHeight / 2 + 370, mPaint);
-                    mCanvas.drawText("Back to Menu : " + String.valueOf(Gottenstarsum), mWidth / 4 - 20, mHeight / 2 + 570, mPaint);
+                    mCanvas.drawText("Back to Menu" , mWidth / 4, mHeight / 2 + 570, mPaint);
                     Log.e("Surface", String.valueOf(timer));
                     if(timer <= -2.7f && numStar >= 30){
                         mPaint.setTextSize(80);
                         mCanvas.drawText("< Great!!", mWidth / 2 +150, mHeight / 2 + 110, mPaint);
                     }
-                    if (timer <= -3.0f) {
-                        isFinished = true;
-                    }
-                    while (isFinished == true) {
-                        Log.e("Surface_Phase", "Waiting for replay");
-                        mThread.sleep(300);
-                    }
                 }
-                Log.e("Surface_Phase", "Phase---7");
-                if (count >= 4 && timer > -2500.0f) {
-                    Log.e("Surface_Phase", "Phase---8");
-                    timer -= 20.0f / 1000.0f;
+                if (count >= 4 && timer > -2.0f) {
                     if (timer > 0.0f) {
-                        Log.e("Surface_Phase", "Phase---9");
                         String displaytime = String.format("%.2f", timer);
                         mCanvas.drawText("Time : " + displaytime, 100, 200, mPaint);
                     } else if (timer >= 10.0f) {
                         mCanvas.drawText("Time : " + 10.0, 100, 200, mPaint);
                     }
                 }
-                Log.e("Surface_Phase", "Phase---10");
                 if (count < 4) {
                     mCanvas.drawText("Time : " + 10.0, 100, 200, mPaint);
-                    if (portion % 50 == 0) {
-                        //gameThread.sleep(1000);
-                        count += 1;
-                    }
                     if (count < 3) {
                         mPaint.setTextSize(500);
                         mCanvas.drawText(String.valueOf(3 - count), mWidth / 2 - 80, mHeight / 2, mPaint);
@@ -220,12 +195,7 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
                     }
                 }
             }
-            Log.e("Surface_Phase", "Phase---11");
-            portion += 1;
-            time3 = uptimeMillis()-time2;
-            Log.e("Surface_Phase2", String.valueOf(time3));
             getHolder().unlockCanvasAndPost(mCanvas);
-            Log.e("Surface_Phase", String.valueOf(mCanvas==null));
         } catch (Exception e){
             e.printStackTrace();
         }

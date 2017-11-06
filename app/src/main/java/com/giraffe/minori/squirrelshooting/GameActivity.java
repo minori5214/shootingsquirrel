@@ -29,12 +29,14 @@ import icepick.Icepick;
 import icepick.State;
 
 import static android.os.SystemClock.uptimeMillis;
+import static com.giraffe.minori.squirrelshooting.SurfaceCreate.mThread;
 import static com.giraffe.minori.squirrelshooting.SurfaceCreate.replay;
 import static com.giraffe.minori.squirrelshooting.MainActivity.noGameActivity;
 import static java.lang.Math.abs;
+import static java.lang.Thread.sleep;
 
 
-public class GameActivity extends AppCompatActivity implements Runnable{
+public class GameActivity extends AppCompatActivity{
     private SurfaceCreate mSurfaceView;
     //MediaPlayer mediaPlayer2;
 
@@ -48,7 +50,7 @@ public class GameActivity extends AppCompatActivity implements Runnable{
     public static float distance_y;
     public static float velocity_x;
     public static float velocity_y;
-    private Thread gameThread;
+    private myThread gameThread;
     boolean mThreadRun;
     private boolean mIsAttached;
 
@@ -92,7 +94,7 @@ public class GameActivity extends AppCompatActivity implements Runnable{
     private long time2;
     volatile public static boolean isFinished;
     volatile public static boolean surfacefinish;
-    public static boolean greatswitch;
+    private static boolean greatswitch;
 
     MediaPlayer mediaPlayer3;
     SoundPool mSoundPool;
@@ -154,7 +156,7 @@ public class GameActivity extends AppCompatActivity implements Runnable{
         mSoundGreat = mSurfaceSoundPool.load(getApplicationContext(), R.raw.se_maoudamashii_onepoint04, 0);
 
         mThreadRun = true;
-        gameThread = new Thread(this);
+        gameThread = new myThread();
         gameThread.start();
     }
 
@@ -174,42 +176,55 @@ public class GameActivity extends AppCompatActivity implements Runnable{
         Log.e("Game","OnResume");
     }
 
-    @Override
-    public void run() {
-        mIsAttached = true;
-        while (mIsAttached) {
-            //if(replay == true) {
-            //    replay = false;
-            //    initialize();
-            //}
-            time = uptimeMillis();
-            Log.e("Game", String.valueOf(time2));
-            update();
-            time2 = uptimeMillis()-time;
-            Log.e("Game2", String.valueOf(time2));
-            while (uptimeMillis() - time <= 20) {
+
+    class myThread extends Thread {
+        boolean stop = false;
+
+        @Override
+        public void run() {
+            mIsAttached = true;
+            while (mIsAttached) {
+                //if(replay == true) {
+                //    replay = false;
+                //    initialize();
+                //}
+                time = uptimeMillis();
+                Log.e("Game", String.valueOf(time2));
+                update();
+                time2 = uptimeMillis() - time;
+                Log.e("Game2", String.valueOf(time2));
+                while (uptimeMillis() - time <= 20) {
+                }
+            }
+            Log.e("Game", "Thread ends");
+        }
+
+        public synchronized void setStop() {
+            stop = !stop;
+            if(!stop) {
+                notify();
             }
         }
-        Log.e("Game", "Thread ends");
+
     }
 
     @Override
-    protected synchronized void onPause(){
+    protected void onPause(){
         super.onPause();
-        mediaPlayer3.pause();
-        noGameActivity = true;
-        Log.e("Game","OnPause");
-        //mediaPlayer3.pause();
-    }
-
-    protected void onStop(){
-        super.onStop();
         mediaPlayer3.pause();
         SharedPreferences pref = getSharedPreferences("MyPref", GameActivity.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putInt("StarSum", Gottenstarsum);
         Log.e("Save",String.valueOf(Gottenstarsum));
         editor.commit();
+        noGameActivity = true;
+        gameThread.setStop();
+    }
+
+    protected void onStop(){
+        super.onStop();
+        mediaPlayer3.pause();
+        Log.e("onStop", "gameactivity Stop");
         Log.e("Game","OnStop");
         //finish();
     }
@@ -231,7 +246,7 @@ public class GameActivity extends AppCompatActivity implements Runnable{
         mSurfaceView = new SurfaceCreate(this);
         setContentView(mSurfaceView);
         mediaPlayer3.start();
-        //mediaPlayer3.start();
+        gameThread.setStop();
     }
 
     @Override
@@ -275,20 +290,19 @@ public class GameActivity extends AppCompatActivity implements Runnable{
                     }
                 }
             }
-            //mSquirrel.move(velocity_x/100.0f,velocity_y/100.0f);
-            //if(isStop() == true){
-                //if(mSquirrel.getRight() <0.0f-100.0f || mSquirrel.getLeft() > mWidth+100.0f || mSquirrel.getBottom() < 0.0f-100.0f || mSquirrel.getTop() > mHeight+100.0f){
-                //mThread.sleep(1000);
-                //newStar(Gottenstar);
-                //Gottenstar = 0;
-                //mSquirrel.setLocate(mWidth/2, (float)mHeight-(float)mBitmapSquirrel.getHeight());
-                //Moving = false;
-                //StopFlag = false;
-                //mSquirrel.Svelocity_x = 0.0f;
-                //mSquirrel.Svelocity_y = 0.0f;
-                //velocity_x = 0.0f;
-                //velocity_y = 0.0f;
-            //}
+
+            if (timer <= -3.0f) {
+                isFinished = true;
+            }
+            if (count >= 4 && timer > -2500.0f) {
+                timer -= 20.0f / 1000.0f;
+            }
+            if (count < 4) {
+                if (portion % 50 == 0) {
+                    count += 1;
+                }
+            }
+            portion += 1;
             Log.e("GamePhase", "Phase_2");
             if(timer <=0.0f && isLocked == false){
                 timer = 0.0f;
@@ -298,7 +312,7 @@ public class GameActivity extends AppCompatActivity implements Runnable{
                 Moving = false;
                 Gottenstarsum += numStar;
             }
-            if(greatswitch == true){
+            if(timer <= -2.0f && numStar >= 30 && greatswitch == true){
                 mSurfaceSoundPool.play(mSoundGreat, 1.0F, 1.0F, 0, 0, 1.0F);
                 greatswitch = false;
             }
@@ -306,14 +320,17 @@ public class GameActivity extends AppCompatActivity implements Runnable{
         } catch (Exception e){
             e.printStackTrace();
         }
-
-    }
-
-    public boolean isStop(){
-        if(mSquirrel.getRight() <0.0f-100.0f || mSquirrel.getLeft() > mWidth+100.0f || mSquirrel.getBottom() < 0.0f-100.0f || mSquirrel.getTop() > mHeight+100.0f || StopFlag == true) {
-            return true;
+        try {
+            synchronized (gameThread) {
+                if (gameThread.stop) {
+                    Log.e("Wait", "Waiting");
+                    gameThread.wait();
+                }
+            }
+        } catch (InterruptedException e){
+            e.printStackTrace();
         }
-        else return false;
+
     }
     private void rePlay(){
         mSquirrel.setLocate(mWidth/2, (float)mHeight-(float)mBitmapSquirrel.getHeight());
@@ -464,47 +481,31 @@ public class GameActivity extends AppCompatActivity implements Runnable{
         Log.e("Surface","planet18");
     }
     private void initialize(){
-        //Log.e("Surface","Then here");
         mRand = new Random();
-        //Log.e("Surface","Then here2");
         numStar = 0;
-        //Log.e("Surface","Then here3");
         newBlackhall();
-        //Log.e("Surface","Then here4");
         newStar(-1);
-        //Log.e("Surface","Then here5");
         newPlanet();
-        //Log.e("Surface","Then here6");
         newSquirrel();
-        //Log.e("Surface","Then here7");
         Moving = false;
-        //Log.e("Surface","Then here8");
         isFinished = false;
         isLocked = false;
         surfacefinish = false;
-        //Log.e("Surface","Then here9");
+        greatswitch = true;
         timer = 10.0f;
-        //Log.e("Surface","Then here10");
-        notStartYet = true;
-        //Log.e("Surface","Then here11");
         count = 0;
         portion = 1;
-        //Log.e("Surface","Then here12");
     }
 
     @Override
     public  boolean onTouchEvent(MotionEvent event){
+        Log.e("Touch","nonTouch");
         if (isFinished == true) {
+            Log.e("Touch","yesTouch");
             isFinished = false;
-            //mSurfaceView = new SurfaceCreate(this);
-            //setContentView(mSurfaceView);
             replay = true;
             initialize();
-            //finish();
-            //Intent intent = new Intent(GameActivity.this, Result.class);
-            //startActivity(intent);
         }
-        //return super.onTouchEvent(event);
         return mGestureDetector.onTouchEvent(event);
     }
 
