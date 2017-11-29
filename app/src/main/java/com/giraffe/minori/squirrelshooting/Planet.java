@@ -12,13 +12,11 @@ import java.util.Timer;
 public class Planet extends GameObject {
     private Bitmap image;
     private float degrees;
-    private Point axis;
     private float Pvelocity_x;
     private float Pvelocity_y;
     private float magx;
     private float magy;
     private int speed;
-    private Timer t;
     public Planet(float left, float top, float width, float height, float mass, float degrees, float magx, float magy, int speed, Bitmap image){
         super(left, top, width, height, mass);
         this.image = image;

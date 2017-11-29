@@ -23,13 +23,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
-    ConstraintLayout tapLayout;
     private Handler mHandler = new Handler();
     private ScheduledExecutorService mScheduledExecutor;
     private TextView mLblMeasuring;
     public static boolean noGameActivity;
     MediaPlayer mediaPlayer;
-    public static boolean isGameBGMeEnded;
 
     private void startMeasure() {
         mLblMeasuring = (TextView) findViewById(R.id.title);
@@ -110,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
+        Log.e("Main","onPause"+ mediaPlayer);
         mediaPlayer.pause();
         Log.e("Main","onPause");
     }
@@ -117,28 +116,27 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop(){
         mediaPlayer.pause();
+        Log.e("Main","onStop"+ mediaPlayer);
         super.onStop();
         Log.e("Main","OnStop");
     }
     @Override
     protected void onRestart(){
         super.onRestart();
-        //mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit29);
         mediaPlayer.start();
         Log.e("Main","onRestart");
     }
     @Override
     protected void onDestroy(){
         super.onDestroy();
+        mediaPlayer.stop();
+        mediaPlayer.reset();
         mediaPlayer.release();
         Log.e("Main","onDestroy");
     }
     @Override
     public boolean onTouchEvent(MotionEvent event){
         Log.e("Main","You touched mainactivity!");
-        mediaPlayer.stop();
-        mediaPlayer.reset();
-        mediaPlayer.release();
         Intent intent = new Intent(MainActivity.this, MenuActivity.class);
         startActivity(intent);
         return super.onTouchEvent(event);

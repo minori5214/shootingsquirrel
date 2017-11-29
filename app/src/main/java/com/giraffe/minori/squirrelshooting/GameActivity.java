@@ -1,21 +1,21 @@
 package com.giraffe.minori.squirrelshooting;
 
-import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.util.Log;
+import static java.lang.Math.abs;
+import static android.os.SystemClock.uptimeMillis;
+
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
+
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
+
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -25,20 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import icepick.Icepick;
-import icepick.State;
-
-import static android.os.SystemClock.uptimeMillis;
-import static com.giraffe.minori.squirrelshooting.SurfaceCreate.mThread;
 import static com.giraffe.minori.squirrelshooting.SurfaceCreate.replay;
 import static com.giraffe.minori.squirrelshooting.MainActivity.noGameActivity;
-import static java.lang.Math.abs;
-import static java.lang.Thread.sleep;
-
 
 public class GameActivity extends AppCompatActivity{
     private SurfaceCreate mSurfaceView;
-    //MediaPlayer mediaPlayer2;
 
     public static int count;
     public static int portion;
@@ -47,47 +38,42 @@ public class GameActivity extends AppCompatActivity{
     private static final int SWIPE_THRESHOLD_VELOCITY = 200;
     private static final int SWIPE_MAX_OFF_PATH = 250;
     private GestureDetector mGestureDetector;
-    public static float distance_y;
     public static float velocity_x;
     public static float velocity_y;
+
     private myThread gameThread;
     boolean mThreadRun;
     private boolean mIsAttached;
 
     volatile public static Squirrel mSquirrel;
     public static Bitmap mBitmapSquirrel;
-
     volatile public static Blackhall mBlackhall;
     public static Bitmap mBitmapBlackhall;
-
     volatile public static Planet mPlanet;
     public static Bitmap mBitmapEarth;
     public static Bitmap mBitmapMars;
     public static Bitmap mBitmapUranus;
     public static Bitmap mBitmapSaturn;
+    volatile public static Star mStar;
+    public static Bitmap mBitmapStar;
 
     public static int mWidth;
     public static int mHeight;
-
-    volatile public static Star mStar;
-    public static Bitmap mBitmapStar;
 
     volatile public static List<Blackhall> mBlackhallList = new ArrayList<>(2);
     volatile public static List<Star> mStarList = new ArrayList<>(15);
     volatile public static List<Planet> mPlanetList = new ArrayList<>(4);
 
     volatile public static boolean Moving;
-    volatile public boolean isStop;
     volatile public static boolean StopFlag;
 
+    volatile public static int numStar;
     volatile public static int Gottenstar = 0;
     volatile public static int Gottenstarsum;
 
-    volatile public static boolean notStartYet;
     volatile public static boolean isLocked;
 
     private Random mRand;
-    volatile public static int numStar;
 
     volatile public static float timer;
     private long time;
@@ -107,8 +93,6 @@ public class GameActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         Log.e("Game","OnCreate");
         super.onCreate(savedInstanceState);
-        Log.e("Save", String.valueOf(Gottenstarsum));
-
         SharedPreferences pref = getSharedPreferences("MyPref", GameActivity.MODE_PRIVATE);
         Gottenstarsum = pref.getInt("StarSum", 0);
         Log.e("Save",String.valueOf(Gottenstarsum));
@@ -171,8 +155,6 @@ public class GameActivity extends AppCompatActivity{
         super.onResume();
         mediaPlayer3.start();
         mGestureDetector = new GestureDetector(this, mOnGestureListener);
-        //mediaPlayer2 = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit11);
-        //mediaPlayer2.start();
         Log.e("Game","OnResume");
     }
 
@@ -184,15 +166,9 @@ public class GameActivity extends AppCompatActivity{
         public void run() {
             mIsAttached = true;
             while (mIsAttached) {
-                //if(replay == true) {
-                //    replay = false;
-                //    initialize();
-                //}
                 time = uptimeMillis();
-                Log.e("Game", String.valueOf(time2));
                 update();
                 time2 = uptimeMillis() - time;
-                Log.e("Game2", String.valueOf(time2));
                 while (uptimeMillis() - time <= 20) {
                 }
             }
@@ -224,9 +200,7 @@ public class GameActivity extends AppCompatActivity{
     protected void onStop(){
         super.onStop();
         mediaPlayer3.pause();
-        Log.e("onStop", "gameactivity Stop");
         Log.e("Game","OnStop");
-        //finish();
     }
     @Override
     protected void onDestroy(){
@@ -255,14 +229,12 @@ public class GameActivity extends AppCompatActivity{
 
     public void update(){
         try {
-            Log.e("GamePhase", "Phase_0");
             if(count >= 4 && isLocked == false) {
                 if(velocity_x!=0 || velocity_y!=0){
                     mSquirrel.Svelocity_x = velocity_x/200.0f;
                     mSquirrel.Svelocity_y = velocity_y/200.0f;
                     Moving = true;
                 }
-                Log.e("GamePhase_rotation", "Phase_0_1");
                 for (Planet planet : mPlanetList) {
                     planet.rotation();
                     if (mSquirrel.collision(planet)) {
@@ -273,7 +245,6 @@ public class GameActivity extends AppCompatActivity{
                     }
                 }
             }
-            Log.e("GamePhase", "Phase_1");
             if(Moving == true){
                 mSquirrel.update(mSquirrel.calcNetForceExertedByX(mBlackhallList), mSquirrel.calcNetForceExertedByY(mBlackhallList));
                 if(mSquirrel.getRight() <0.0f-100.0f || mSquirrel.getLeft() > mWidth+100.0f || mSquirrel.getBottom() < 0.0f-100.0f || mSquirrel.getTop() > mHeight+100.0f){
@@ -303,7 +274,6 @@ public class GameActivity extends AppCompatActivity{
                 }
             }
             portion += 1;
-            Log.e("GamePhase", "Phase_2");
             if(timer <=0.0f && isLocked == false){
                 timer = 0.0f;
                 velocity_x = 0.0f;
@@ -323,7 +293,7 @@ public class GameActivity extends AppCompatActivity{
         try {
             synchronized (gameThread) {
                 if (gameThread.stop) {
-                    Log.e("Wait", "Waiting");
+                    Log.e("Game", "Thread is Waiting");
                     gameThread.wait();
                 }
             }
@@ -359,7 +329,7 @@ public class GameActivity extends AppCompatActivity{
             //float left = 200 + 500 * i + (float)(mRand.nextInt(mWidth/4)-mWidth/4);
             //float top = 200 + 600 * i + (float)(mRand.nextInt(mHeight/4)-mWidth/4);
             if(i>0){
-                while(flag == true){
+                while(flag){
                     flag = false;
                     if( (nexttop-200.0f) <= top.get(0) && (nexttop+200.0f) >= top.get(0)){
                         nexttop = (float)(mRand.nextInt(mHeight/2));
@@ -387,8 +357,6 @@ public class GameActivity extends AppCompatActivity{
             number = 15;
         }
         for(int i=0; i<number; i++){
-            //float left = 100;
-            //float top = 100;
             float left = mRand.nextInt(mWidth);
             float top = mRand.nextInt(mHeight - mBitmapStar.getHeight() * 2);
             float mass = 10.0f;
@@ -397,54 +365,30 @@ public class GameActivity extends AppCompatActivity{
         }
     }
     private void newPlanet(){
-        Log.e("Surface","planet1");
         Planet planet;
-        Log.e("Surface","planet2");
         mPlanetList.clear();
-        Log.e("Surface","planet3");
         List<Bitmap> images= new ArrayList<>(4);
-        Log.e("Surface","planet4");
         List<Float> left = new ArrayList<>(4);
-        Log.e("Surface","planet5");
         List<Float> top = new ArrayList<>(4);
-        Log.e("Surface","planet6");
         float nextleft;
-        Log.e("Surface","planet7");
         float nexttop;
-        Log.e("Surface","planet8");
-        //images.add(mBitmapEarth);
-        //images.add(mBitmapMars);
-        //images.add(mBitmapSaturn);
-        //images.add(mBitmapUranus);
         float degrees = 0.0f;
         float magx = 0.0f;
         float magy = 0.0f;
         int speed = 0;
-        Log.e("Surface","planet9");
         Bitmap image = null;
-        Log.e("Surface","planet10");
         for(int i=0; i<4; i++){
-            Log.e("Surface","planet10_2");
             nextleft = (float)(mRand.nextInt(mWidth - 80)+40);
-            Log.e("Surface","planet10_3");
             nexttop = (float)(mRand.nextInt(mHeight - 900)+300);
-            Log.e("Surface","planet10_4");
             for(int j=0; j < i; j++){
-                Log.e("Surface","planet10_5");
                 //if not acceptable execute nextInt again
                 if( (nexttop-100.0f) <= top.get(j) && (nexttop+100.0f) >= top.get(j)){
-                    Log.e("Surface","planet10_6");
                     nexttop = (float)(mRand.nextInt(mHeight - 900)+300);
-                    Log.e("Surface","planet10_7");
                     //j = 0;
-                    Log.e("Surface","planet10_8");
                 }
             }
-            Log.e("Surface","planet11");
             left.add(nextleft);
-            Log.e("Surface","planet12");
             top.add(nexttop);
-            Log.e("Surface","planet13");
             if(i == 0){
                 degrees = 0.0f + 45.0f * i;
                 magx = 8.0f;
@@ -470,15 +414,10 @@ public class GameActivity extends AppCompatActivity{
                 speed = 2;
                 image = mBitmapUranus;
             }
-            Log.e("Surface","planet14");
             float mass = 10.0f;
-            Log.e("Surface","planet15");
             planet = new Planet(nextleft, nexttop, image.getWidth(), image.getHeight(), mass, degrees, magx, magy, speed, image);
-            Log.e("Surface","planet16");
             mPlanetList.add(planet);
-            Log.e("Surface","planet17");
         }
-        Log.e("Surface","planet18");
     }
     private void initialize(){
         mRand = new Random();
@@ -499,9 +438,7 @@ public class GameActivity extends AppCompatActivity{
 
     @Override
     public  boolean onTouchEvent(MotionEvent event){
-        Log.e("Touch","nonTouch");
-        if (isFinished == true) {
-            Log.e("Touch","yesTouch");
+        if (isFinished) {
             isFinished = false;
             replay = true;
             initialize();
@@ -512,7 +449,7 @@ public class GameActivity extends AppCompatActivity{
     public GestureDetector.SimpleOnGestureListener mOnGestureListener = new GestureDetector.SimpleOnGestureListener(){
         @Override
         public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
-                if (Moving == false) {
+                if (!Moving) {
                     // 移動距離・スピードを出力
                     //distance_y = Math.abs((event1.getY() - event2.getY()));
                     if(velocityX <= -9000){

@@ -16,7 +16,6 @@ import static com.giraffe.minori.squirrelshooting.MainActivity.noGameActivity;
 
 public class MenuActivity extends AppCompatActivity {
     MediaPlayer mediaPlayer2;
-    //MediaPlayer mediaPlayer3;
 
 
     @Override
@@ -36,7 +35,6 @@ public class MenuActivity extends AppCompatActivity {
         mediaPlayer2 = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit13);
         mediaPlayer2.setLooping(true);
         mediaPlayer2.seekTo(0);
-        //mediaPlayer3 = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit11);
 
     }
     private void setScreenMenu(){
@@ -48,13 +46,11 @@ public class MenuActivity extends AppCompatActivity {
                 if(noGameActivity==true) {
                     noGameActivity = false;
                     mediaPlayer2.pause();
-                    //isGameBGMeEnded = false;
-                    //mediaPlayer3.start();
                     Intent intent = new Intent(MenuActivity.this, GameActivity.class);
                     startActivity(intent);
-                    mediaPlayer2.stop();
-                    mediaPlayer2.reset();
-                    mediaPlayer2.release();
+                    //mediaPlayer2.stop();
+                    //mediaPlayer2.reset();
+                    //mediaPlayer2.release();
                 }
             }
         });
@@ -123,10 +119,9 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     protected void onDestroy(){
         super.onDestroy();
+        mediaPlayer2.stop();
+        mediaPlayer2.reset();
         mediaPlayer2.release();
-        //mediaPlayer3.stop();
-        //mediaPlayer3.reset();
-        //mediaPlayer3.release();
         Log.e("Menu","onDestroy");
     }
 
@@ -137,18 +132,6 @@ public class MenuActivity extends AppCompatActivity {
     @Override protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
-    //@Override
-    //public boolean onTouchEvent(MotionEvent event){
-    //    Log.e("Main","You touched mainactivity!");
-    //    if(noGameActivity==true) {
-    //        noGameActivity = false;
-    //        mediaPlayer2.pause();
-    //        //isGameBGMeEnded = false;
-    //        mediaPlayer3.start();
-    //        Intent intent = new Intent(MenuActivity.this, GameActivity.class);
-    //        startActivity(intent);
-    //    }
-    //    return super.onTouchEvent(event);
-    //}
+
 }
 
