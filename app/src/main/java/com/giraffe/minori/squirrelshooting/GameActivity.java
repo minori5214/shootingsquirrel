@@ -1,5 +1,8 @@
 package com.giraffe.minori.squirrelshooting;
 
+import android.annotation.TargetApi;
+import android.media.AudioManager;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -121,22 +124,22 @@ public class GameActivity extends AppCompatActivity{
         mediaPlayer3 = MediaPlayer.create(getApplicationContext(), R.raw.bgm_maoudamashii_8bit11);
         mediaPlayer3.setLooping(true);
         mediaPlayer3.seekTo(0);
-
-        mSoundPool = new SoundPool.Builder()
-                .setAudioAttributes(new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_GAME)
-                        .build())
-                .setMaxStreams(5)
-                .build();
+        mSoundPool = buildSoundPool(5);
+        //mSoundPool = new SoundPool.Builder()
+        //        .setAudioAttributes(new AudioAttributes.Builder()
+        //                .setUsage(AudioAttributes.USAGE_GAME)
+        //                .build())
+        //        .setMaxStreams(5)
+        //        .build();
         mSoundStar = mSoundPool.load(getApplicationContext(), R.raw.se_maoudamashii_system46, 0);
         mSoundCollision = mSoundPool.load(getApplicationContext(), R.raw.se_maoudamashii_retro28, 1);
-
-        mSurfaceSoundPool = new SoundPool.Builder()
-            .setAudioAttributes(new AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_GAME)
-                .build())
-            .setMaxStreams(1)
-            .build();
+        mSurfaceSoundPool = buildSoundPool(1);
+        //mSurfaceSoundPool = new SoundPool.Builder()
+        //    .setAudioAttributes(new AudioAttributes.Builder()
+        //        .setUsage(AudioAttributes.USAGE_GAME)
+        //        .build())
+        //    .setMaxStreams(1)
+        //    .build();
         mSoundGreat = mSurfaceSoundPool.load(getApplicationContext(), R.raw.se_maoudamashii_onepoint04, 0);
 
         mThreadRun = true;
@@ -229,7 +232,7 @@ public class GameActivity extends AppCompatActivity{
 
     public void update(){
         try {
-            if(count >= 4 && isLocked == false) {
+            if(count >= 4 && !isLocked) {
                 if(velocity_x!=0 || velocity_y!=0){
                     mSquirrel.Svelocity_x = velocity_x/200.0f;
                     mSquirrel.Svelocity_y = velocity_y/200.0f;
@@ -245,7 +248,7 @@ public class GameActivity extends AppCompatActivity{
                     }
                 }
             }
-            if(Moving == true){
+            if(Moving){
                 mSquirrel.update(mSquirrel.calcNetForceExertedByX(mBlackhallList), mSquirrel.calcNetForceExertedByY(mBlackhallList));
                 if(mSquirrel.getRight() <0.0f-100.0f || mSquirrel.getLeft() > mWidth+100.0f || mSquirrel.getBottom() < 0.0f-100.0f || mSquirrel.getTop() > mHeight+100.0f){
                     synchronized (mStarList) {
@@ -274,7 +277,7 @@ public class GameActivity extends AppCompatActivity{
                 }
             }
             portion += 1;
-            if(timer <=0.0f && isLocked == false){
+            if(timer <=0.0f && !isLocked){
                 timer = 0.0f;
                 velocity_x = 0.0f;
                 velocity_y = 0.0f;
@@ -282,7 +285,7 @@ public class GameActivity extends AppCompatActivity{
                 Moving = false;
                 Gottenstarsum += numStar;
             }
-            if(timer <= -2.0f && numStar >= 30 && greatswitch == true){
+            if(timer <= -2.0f && numStar >= 30 && greatswitch){
                 mSurfaceSoundPool.play(mSoundGreat, 1.0F, 1.0F, 0, 0, 1.0F);
                 greatswitch = false;
             }
@@ -418,6 +421,26 @@ public class GameActivity extends AppCompatActivity{
             planet = new Planet(nextleft, nexttop, image.getWidth(), image.getHeight(), mass, degrees, magx, magy, speed, image);
             mPlanetList.add(planet);
         }
+    }
+    @SuppressWarnings("deprecation")
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private SoundPool buildSoundPool(int poolMax) {
+        SoundPool pool = null;
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            pool = new SoundPool(poolMax, AudioManager.STREAM_MUSIC, 0);
+        } else {
+            AudioAttributes attr = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .build();
+
+            pool = new SoundPool.Builder()
+                    .setAudioAttributes(attr)
+                    .setMaxStreams(poolMax)
+                    .build();
+        }
+
+        return pool;
     }
     private void initialize(){
         mRand = new Random();

@@ -5,7 +5,7 @@ android {
     buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.giraffe.minori.squirrelshooting"
-        minSdkVersion 21
+        minSdkVersion 14
         targetSdkVersion 24
         versionCode 3
         versionName "1.2"
