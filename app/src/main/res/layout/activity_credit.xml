@@ -16,9 +16,8 @@ tools:context="com.giraffe.minori.squirrelshooting.MenuActivity">
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8sp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="8sp"
+        android:layout_marginTop="80sp"
         android:layout_marginBottom="8sp"
-        app:layout_constraintVertical_bias="0.73"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/cre_mao" />
 
@@ -34,7 +33,6 @@ tools:context="com.giraffe.minori.squirrelshooting.MenuActivity">
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="8sp"
         android:layout_marginBottom="138sp"
-        app:layout_constraintVertical_bias="0.73"
         app:layout_constraintBottom_toTopOf="@+id/menu" />
 
     <Button
@@ -49,8 +47,7 @@ tools:context="com.giraffe.minori.squirrelshooting.MenuActivity">
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8sp"
         app:layout_constraintHorizontal_bias="0.502"
-        android:layout_marginTop="8sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.856" />
+        android:layout_marginTop="400sp"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

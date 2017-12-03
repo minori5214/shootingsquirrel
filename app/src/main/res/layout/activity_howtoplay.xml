@@ -16,12 +16,12 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8sp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="8sp"
-        android:layout_marginBottom="8sp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="500sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.015"
-        app:layout_constraintHorizontal_bias="0.502" />
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintVertical_bias="0.517" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -29,15 +29,14 @@
         android:id="@+id/squirrel"
         android:src="@drawable/squirrel"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="8sp"
+        android:layout_marginTop="50sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8sp"
-        app:layout_constraintVertical_bias="0.024"
+        android:layout_marginBottom="430sp"
         android:layout_marginLeft="8sp"
-        app:layout_constraintTop_toBottomOf="@+id/flick"
         android:layout_marginRight="8sp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.447"/>
+        app:layout_constraintHorizontal_bias="0.448"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:layout_width="79sp"
@@ -45,15 +44,14 @@
         android:id="@+id/flickhand"
         android:src="@drawable/flickhand"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="0sp"
+        android:layout_marginTop="60sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8sp"
-        app:layout_constraintVertical_bias="0.0"
+        android:layout_marginBottom="410sp"
         android:layout_marginLeft="8sp"
-        app:layout_constraintTop_toBottomOf="@+id/flick"
         android:layout_marginRight="8sp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.597" />
+        app:layout_constraintHorizontal_bias="0.598"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -66,10 +64,10 @@
         android:layout_marginRight="8sp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="8sp"
-        android:layout_marginBottom="8sp"
+        android:layout_marginBottom="200sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.314" />
+        />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -78,11 +76,13 @@
         android:src="@drawable/squirrel"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="266sp"
         android:layout_marginBottom="266sp"
         android:layout_marginLeft="8sp"
         android:layout_marginRight="8sp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.607" />
+        app:layout_constraintHorizontal_bias="0.607"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -90,12 +90,14 @@
         android:id="@+id/star"
         android:src="@drawable/star"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginBottom="30sp"
+        android:layout_marginBottom="10sp"
         android:layout_marginLeft="8sp"
         android:layout_marginRight="8sp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintHorizontal_bias="0.402"
-        app:layout_constraintBottom_toTopOf="@+id/watchout" />
+        app:layout_constraintBottom_toTopOf="@+id/watchout"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/getstar" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -103,12 +105,14 @@
         android:id="@+id/star2"
         android:src="@drawable/star"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginBottom="55sp"
+        android:layout_marginBottom="45sp"
         android:layout_marginLeft="8sp"
         android:layout_marginRight="8sp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintHorizontal_bias="0.355"
-        app:layout_constraintBottom_toTopOf="@+id/watchout" />
+        app:layout_constraintBottom_toTopOf="@+id/watchout"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/getstar" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -121,7 +125,10 @@
         android:layout_marginRight="8sp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintHorizontal_bias="0.431"
-        app:layout_constraintBottom_toTopOf="@+id/watchout" />
+        app:layout_constraintBottom_toTopOf="@+id/watchout"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/getstar"
+        app:layout_constraintVertical_bias="0.502" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -133,11 +140,11 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8sp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="8sp"
+        android:layout_marginTop="110sp"
         android:layout_marginBottom="8sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.579" />
+        />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -146,10 +153,9 @@
         android:src="@drawable/earth"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8sp"
+        android:layout_marginTop="290sp"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8sp"
-        app:layout_constraintVertical_bias="0.778"
         app:layout_constraintRight_toLeftOf="@+id/mars"
         android:layout_marginLeft="8sp" />
 
@@ -161,10 +167,9 @@
         android:layout_marginLeft="8sp"
         app:layout_constraintLeft_toRightOf="@+id/earth"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8sp"
+        android:layout_marginTop="290sp"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8sp"
-        app:layout_constraintVertical_bias="0.778"
         app:layout_constraintRight_toLeftOf="@+id/saturn" />
 
     <ImageView
@@ -174,10 +179,9 @@
         android:src="@drawable/saturn"
         app:layout_constraintLeft_toRightOf="@+id/mars"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8sp"
+        android:layout_marginTop="290sp"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8sp"
-        app:layout_constraintVertical_bias="0.778"
         app:layout_constraintRight_toLeftOf="@+id/blackhall" />
 
     <ImageView
@@ -188,10 +192,9 @@
         app:layout_constraintLeft_toRightOf="@+id/saturn"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8sp"
+        android:layout_marginTop="290sp"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8sp"
-        app:layout_constraintVertical_bias="0.778"
         android:layout_marginRight="8sp" />
 
     <Button
@@ -202,9 +205,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8sp"
-        android:layout_marginTop="8sp"
+        android:layout_marginTop="480sp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.964"
         android:layout_marginLeft="8sp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8sp"

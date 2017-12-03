@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SquirrelShooting</string>
+    <string name="touchscreen">TOUCH SCREEN</string>
+    <string name="gamestart">ゲーム開始</string>
+    <string name="howtoplay">遊び方</string>
+    <string name="flick">1. リスを飛ばそうl!</string>
+    <string name="getstar">2. たくさん星を集めよう!!!</string>
+    <string name="watchout">3. 障害物に注意!</string>
+    <string name="menu">メニューに戻る</string>
+    <string name="credit">クレジット</string>
+    <string name="cre_mao">BGM ･ 効果音 : 魔王魂</string>
+    <string name="cre_author">Producted by Pi-hyoro</string>
+    <string name="records">Records</string>
+    <string name="changeanimal">Change Animal</string>
+    <string name="playagain">Play again?</string>
+</resources>
