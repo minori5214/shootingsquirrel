@@ -3,3 +3,8 @@
 Main source code is here: 
 
 /app/src/main/java/com/giraffe/minori/squirrelshooting/
+
+
+The game is published in Google Play. URL is: 
+
+https://play.google.com/store/apps/details?id=com.giraffe.minori.squirrelshooting
