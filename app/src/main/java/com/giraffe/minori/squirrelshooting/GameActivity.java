@@ -92,6 +92,8 @@ public class GameActivity extends AppCompatActivity{
     SoundPool mSurfaceSoundPool;
     private int mSoundGreat;
 
+    volatile public static boolean drawFlag;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.e("Game","OnCreate");
@@ -125,21 +127,9 @@ public class GameActivity extends AppCompatActivity{
         mediaPlayer3.setLooping(true);
         mediaPlayer3.seekTo(0);
         mSoundPool = buildSoundPool(5);
-        //mSoundPool = new SoundPool.Builder()
-        //        .setAudioAttributes(new AudioAttributes.Builder()
-        //                .setUsage(AudioAttributes.USAGE_GAME)
-        //                .build())
-        //        .setMaxStreams(5)
-        //        .build();
         mSoundStar = mSoundPool.load(getApplicationContext(), R.raw.se_maoudamashii_system46, 0);
         mSoundCollision = mSoundPool.load(getApplicationContext(), R.raw.se_maoudamashii_retro28, 1);
         mSurfaceSoundPool = buildSoundPool(1);
-        //mSurfaceSoundPool = new SoundPool.Builder()
-        //    .setAudioAttributes(new AudioAttributes.Builder()
-        //        .setUsage(AudioAttributes.USAGE_GAME)
-        //        .build())
-        //    .setMaxStreams(1)
-        //    .build();
         mSoundGreat = mSurfaceSoundPool.load(getApplicationContext(), R.raw.se_maoudamashii_onepoint04, 0);
 
         mThreadRun = true;
@@ -174,6 +164,7 @@ public class GameActivity extends AppCompatActivity{
                 time2 = uptimeMillis() - time;
                 while (uptimeMillis() - time <= 20) {
                 }
+                drawFlag = true;
             }
             Log.e("Game", "Thread ends");
         }

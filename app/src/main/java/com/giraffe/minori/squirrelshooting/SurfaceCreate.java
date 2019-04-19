@@ -13,6 +13,7 @@ import static android.os.SystemClock.uptimeMillis;
 
 import static com.giraffe.minori.squirrelshooting.GameActivity.Gottenstarsum;
 import static com.giraffe.minori.squirrelshooting.GameActivity.count;
+import static com.giraffe.minori.squirrelshooting.GameActivity.drawFlag;
 import static com.giraffe.minori.squirrelshooting.GameActivity.mBitmapBlackhall;
 import static com.giraffe.minori.squirrelshooting.GameActivity.mBitmapSquirrel;
 import static com.giraffe.minori.squirrelshooting.GameActivity.mBitmapStar;
@@ -77,10 +78,9 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
     public void run(){
         Log.e("Surface","Run starts now");
         while(mIsAttached2) {
-            time = uptimeMillis();
-            drawGameBoard();
-            while (uptimeMillis() - time <= 20) {
-
+            if(drawFlag) {
+                drawGameBoard();
+                drawFlag = false;
             }
         }
         Log.e("Surface","Thread ends");
@@ -123,7 +123,7 @@ public class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback
                     mPaint.setTextAlign(Paint.Align.CENTER);
                     //mThread.sleep(1000);
                     mPaint.setTextSize(200);
-                    mCanvas.drawText("Finished!!!", mWidth / 2, mHeight / 2, mPaint);
+                    mCanvas.drawText("Finish!!!", mWidth / 2, mHeight / 2, mPaint);
                     if (timer <= -2.0f){
                         surfacefinish = true;
                     }

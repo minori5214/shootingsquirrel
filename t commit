@@ -1,0 +1,93 @@
+[1mdiff --git a/app/build.gradle b/app/build.gradle[m
+[1mindex afe6da8..30cbce5 100644[m
+[1m--- a/app/build.gradle[m
+[1m+++ b/app/build.gradle[m
+[36m@@ -7,8 +7,8 @@[m [mandroid {[m
+         applicationId "com.giraffe.minori.squirrelshooting"[m
+         minSdkVersion 14[m
+         targetSdkVersion 24[m
+[31m-        versionCode 3[m
+[31m-        versionName "1.2"[m
+[32m+[m[32m        versionCode 5[m
+[32m+[m[32m        versionName "1.3.2"[m
+         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"[m
+     }[m
+     buildTypes {[m
+[1mdiff --git a/app/src/main/java/com/giraffe/minori/squirrelshooting/GameActivity.java b/app/src/main/java/com/giraffe/minori/squirrelshooting/GameActivity.java[m
+[1mindex 67d67b6..15bfdda 100644[m
+[1m--- a/app/src/main/java/com/giraffe/minori/squirrelshooting/GameActivity.java[m
+[1m+++ b/app/src/main/java/com/giraffe/minori/squirrelshooting/GameActivity.java[m
+[36m@@ -92,6 +92,8 @@[m [mpublic class GameActivity extends AppCompatActivity{[m
+     SoundPool mSurfaceSoundPool;[m
+     private int mSoundGreat;[m
+ [m
+[32m+[m[32m    volatile public static boolean drawFlag;[m
+[32m+[m
+     @Override[m
+     protected void onCreate(Bundle savedInstanceState) {[m
+         Log.e("Game","OnCreate");[m
+[36m@@ -125,21 +127,9 @@[m [mpublic class GameActivity extends AppCompatActivity{[m
+         mediaPlayer3.setLooping(true);[m
+         mediaPlayer3.seekTo(0);[m
+         mSoundPool = buildSoundPool(5);[m
+[31m-        //mSoundPool = new SoundPool.Builder()[m
+[31m-        //        .setAudioAttributes(new AudioAttributes.Builder()[m
+[31m-        //                .setUsage(AudioAttributes.USAGE_GAME)[m
+[31m-        //                .build())[m
+[31m-        //        .setMaxStreams(5)[m
+[31m-        //        .build();[m
+         mSoundStar = mSoundPool.load(getApplicationContext(), R.raw.se_maoudamashii_system46, 0);[m
+         mSoundCollision = mSoundPool.load(getApplicationContext(), R.raw.se_maoudamashii_retro28, 1);[m
+         mSurfaceSoundPool = buildSoundPool(1);[m
+[31m-        //mSurfaceSoundPool = new SoundPool.Builder()[m
+[31m-        //    .setAudioAttributes(new AudioAttributes.Builder()[m
+[31m-        //        .setUsage(AudioAttributes.USAGE_GAME)[m
+[31m-        //        .build())[m
+[31m-        //    .setMaxStreams(1)[m
+[31m-        //    .build();[m
+         mSoundGreat = mSurfaceSoundPool.load(getApplicationContext(), R.raw.se_maoudamashii_onepoint04, 0);[m
+ [m
+         mThreadRun = true;[m
+[36m@@ -174,6 +164,7 @@[m [mpublic class GameActivity extends AppCompatActivity{[m
+                 time2 = uptimeMillis() - time;[m
+                 while (uptimeMillis() - time <= 20) {[m
+                 }[m
+[32m+[m[32m                drawFlag = true;[m
+             }[m
+             Log.e("Game", "Thread ends");[m
+         }[m
+[1mdiff --git a/app/src/main/java/com/giraffe/minori/squirrelshooting/SurfaceCreate.java b/app/src/main/java/com/giraffe/minori/squirrelshooting/SurfaceCreate.java[m
+[1mindex d1b0072..484bc2a 100644[m
+[1m--- a/app/src/main/java/com/giraffe/minori/squirrelshooting/SurfaceCreate.java[m
+[1m+++ b/app/src/main/java/com/giraffe/minori/squirrelshooting/SurfaceCreate.java[m
+[36m@@ -13,6 +13,7 @@[m [mimport static android.os.SystemClock.uptimeMillis;[m
+ [m
+ import static com.giraffe.minori.squirrelshooting.GameActivity.Gottenstarsum;[m
+ import static com.giraffe.minori.squirrelshooting.GameActivity.count;[m
+[32m+[m[32mimport static com.giraffe.minori.squirrelshooting.GameActivity.drawFlag;[m
+ import static com.giraffe.minori.squirrelshooting.GameActivity.mBitmapBlackhall;[m
+ import static com.giraffe.minori.squirrelshooting.GameActivity.mBitmapSquirrel;[m
+ import static com.giraffe.minori.squirrelshooting.GameActivity.mBitmapStar;[m
+[36m@@ -77,10 +78,9 @@[m [mpublic class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback[m
+     public void run(){[m
+         Log.e("Surface","Run starts now");[m
+         while(mIsAttached2) {[m
+[31m-            time = uptimeMillis();[m
+[31m-            drawGameBoard();[m
+[31m-            while (uptimeMillis() - time <= 20) {[m
+[31m-[m
+[32m+[m[32m            if(drawFlag) {[m
+[32m+[m[32m                drawGameBoard();[m
+[32m+[m[32m                drawFlag = false;[m
+             }[m
+         }[m
+         Log.e("Surface","Thread ends");[m
+[36m@@ -123,7 +123,7 @@[m [mpublic class SurfaceCreate extends SurfaceView implements SurfaceHolder.Callback[m
+                     mPaint.setTextAlign(Paint.Align.CENTER);[m
+                     //mThread.sleep(1000);[m
+                     mPaint.setTextSize(200);[m
+[31m-                    mCanvas.drawText("Finished!!!", mWidth / 2, mHeight / 2, mPaint);[m
+[32m+[m[32m                    mCanvas.drawText("Finish!!!", mWidth / 2, mHeight / 2, mPaint);[m
+                     if (timer <= -2.0f){[m
+                         surfacefinish = true;[m
+                     }[m
